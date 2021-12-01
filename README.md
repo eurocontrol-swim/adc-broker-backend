@@ -3,7 +3,7 @@ This project was generated with [DJANGO](https://www.djangoproject.com/) version
 Django is a high-level Python web framework.
 
 ## Install python 3
-Please install Python 3 (https://www.python.org/downloads/).
+Please install [Python 3](https://www.python.org/downloads/).
 
 ## Install Django
 Run `python -m pip install Django`.
@@ -14,7 +14,7 @@ Run `cd /adc_backend/`
 `ln -s ../adc-front/dist/adc-front/ static`
 
 ## Development server
-Run `python manage.py runsserver` for a dev server. Navigate to `http://127.0.0.1:8000/`. 
+Run `python manage.py runserver` for a dev server. Navigate to `http://127.0.0.1:8000/`. 
 The app will automatically reload if you change any of the source files.
 
 ## Postgres Database

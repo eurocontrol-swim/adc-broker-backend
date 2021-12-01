@@ -18,6 +18,9 @@ class ORGANIZATIONS(models.Model):
     )
     type = models.CharField(_('type'), default=airport_operator, choices=TYPES, max_length=255)
 
+    class Meta:
+        db_table = 'ORGANIZATION'
+
 class USER_INFO(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_organization = models.ForeignKey(ORGANIZATIONS, on_delete=models.CASCADE)
@@ -32,6 +35,9 @@ class USER_INFO(models.Model):
     )
     user_role = models.CharField(_('user_role'), default=subscriber, choices=ROLES, max_length=255)
 
+    class Meta:
+        db_table = 'USER_INFO'
+
 class DATA_CATALOGUE_ELEMENT(models.Model):
     data_path = models.CharField(max_length=500)
     data_schema = models.CharField(max_length=500)
@@ -42,6 +48,9 @@ class DATA_CATALOGUE_ELEMENT(models.Model):
         (data_element, _('data_element')),
     )
     data_type = models.CharField(_('data_type'), default=topic_element, choices=DATA_TYPES, max_length=255)
+
+    class Meta:
+        db_table = 'DATA_CATALOGUE_ELEMENT'
 
 class PUBLISHER_POLICY(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -56,18 +65,24 @@ class PUBLISHER_POLICY(models.Model):
     policy_type = models.CharField(_('policy_type'), default=topic_based, choices=POLICY_TYPES, max_length=255)
     catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = 'PUBLISHER_POLICY'
+
 class SUBSCRIBER_POLICY(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
     delivery_end_point = models.CharField(max_length=255)
     catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE)
 
+    class Meta:
+        db_table = 'SUBSCRIBER_POLICY'
+
 class TRANSFORMATION_ITEM(models.Model):
-    policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
+    publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE, null=True)
+    subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE, null=True)
     organization = models.ForeignKey(ORGANIZATIONS, on_delete=models.CASCADE)
     data_schema = models.CharField(max_length=500)
-    data_path = models.CharField(max_length=500)
+    json_path = models.CharField(max_length=500)
 
     organization_type = 'Organization type'
     organization_name = 'Organization name'
@@ -86,18 +101,29 @@ class TRANSFORMATION_ITEM(models.Model):
         (payload_extraction, _('payload_extraction')),
     )
     item_operator = models.CharField(_('item_operator'), default=endpoint_restriction, choices=ITEM_OPERATORS, max_length=255)
+    item_order = models.IntegerField(null=True)
 
+    class Meta:
+        db_table = 'TRANSFORMATION_ITEM'
 
-class TOPIC_POLICY_ITEM(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class POLICY_ASSOCIATION(models.Model):
     publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
     subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE)
-    name = models.CharField(max_length=500)
-    path = models.CharField(max_length=500)
 
-class DATA_ELEMENT_POLICY_ITEM(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
-    subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE)
-    name = models.CharField(max_length=500)
-    path = models.CharField(max_length=500)
+    class Meta:
+        db_table = 'POLICY_ASSOCIATION'
+
+
+# class TOPIC_POLICY_ITEM(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
+#     subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=500)
+#     path = models.CharField(max_length=500)
+
+# class DATA_ELEMENT_POLICY_ITEM(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE)
+#     subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE)
+#     name = models.CharField(max_length=500)
+#     path = models.CharField(max_length=500)
