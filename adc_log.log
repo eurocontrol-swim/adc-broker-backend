@@ -8858,3 +8858,456 @@ KeyError: 'name'
 2021-12-01 15:48:07,404-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
 2021-12-01 15:57:19,707-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
 2021-12-01 15:57:20,037-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-01 16:23:52,353-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-01 16:23:54,019-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-01 16:23:54,120-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-01 16:23:54,125-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-01 16:23:54,135-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-01 16:23:54,288-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-01 16:23:54,378-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-01 16:23:55,536-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-01 16:23:57,926-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-01 16:23:58,188-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:14:04,131-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:15:13,773-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:15:18,618-basehttp-INFO :: "GET / HTTP/1.1" 200 799
+2021-12-02 09:15:18,667-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:15:18,703-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:15:18,711-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:15:18,714-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 717535
+2021-12-02 09:15:19,247-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:15:20,663-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:15:20,880-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:15:25,447-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:15:25,512-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 304 0
+2021-12-02 09:15:25,518-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 09:15:25,530-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:15:25,582-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:15:25,767-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:15:25,820-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:18:09,766-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/urls.py changed, reloading.
+2021-12-02 09:18:10,141-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:19:03,370-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:19:03,690-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:19:27,274-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:19:27,580-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:19:42,017-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:19:42,294-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:19:55,767-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:19:56,076-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:20:24,035-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:26:18,122-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:26:18,201-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:26:18,222-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718027
+2021-12-02 09:26:18,232-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:26:18,242-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:26:18,676-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:26:18,751-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:26:19,018-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:26:44,405-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:26:44,431-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718031
+2021-12-02 09:26:44,432-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:26:44,440-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:26:44,611-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:26:44,698-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:26:47,698-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:26:49,950-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:27:00,893-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:28:42,739-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:28:43,065-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:28:45,585-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:28:45,643-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:28:45,644-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:28:45,652-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:28:45,668-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718086
+2021-12-02 09:28:46,018-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:28:46,078-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:28:46,388-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:29:15,697-views-INFO :: postDataCatalogue
+2021-12-02 09:29:15,697-views-INFO :: topic_element
+2021-12-02 09:29:15,765-log-ERROR :: Internal Server Error: /api/postDataCatalogue
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 148, in _wrapped_view
+    return middleware.process_response(request, response)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/middleware/csrf.py", line 327, in process_response
+    self._set_token(request, response)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/middleware/csrf.py", line 186, in _set_token
+    response.set_cookie(
+AttributeError: 'NoneType' object has no attribute 'set_cookie'
+2021-12-02 09:29:15,767-basehttp-ERROR :: "POST /api/postDataCatalogue HTTP/1.1" 500 107481
+2021-12-02 09:29:47,611-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:29:48,015-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:30:05,624-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:30:05,935-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:30:12,288-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:30:12,288-views-INFO :: topic_element
+2021-12-02 09:30:12,356-log-ERROR :: Internal Server Error: /api/postDataCatalogue
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 102, in postDataCatalogue
+    return JsonResponse({'data'})
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/http/response.py", line 596, in __init__
+    raise TypeError(
+TypeError: In order to allow non-dict objects to be serialized set the safe parameter to False.
+2021-12-02 09:30:12,358-basehttp-ERROR :: "POST /api/postDataCatalogue HTTP/1.1" 500 108056
+2021-12-02 09:30:20,448-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:30:20,743-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:30:23,208-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:30:23,209-views-INFO :: topic_element
+2021-12-02 09:30:23,209-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 16
+2021-12-02 09:32:14,026-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:32:14,339-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:33:02,374-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:33:02,651-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:33:25,348-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:33:25,650-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:34:15,725-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:34:15,820-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:34:15,839-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:34:15,841-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718086
+2021-12-02 09:34:15,842-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:34:16,462-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:34:16,565-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:34:16,827-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:34:41,168-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:34:41,168-views-INFO :: topic_element
+2021-12-02 09:34:41,251-log-ERROR :: Internal Server Error: /api/postDataCatalogue
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 103, in postDataCatalogue
+    new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request.data['type'], data_path=request.data['path'], data_schema=request.data['schema'])
+NameError: name 'DATA_CATALOGUE_ELEMENT' is not defined
+2021-12-02 09:34:41,252-basehttp-ERROR :: "POST /api/postDataCatalogue HTTP/1.1" 500 103566
+2021-12-02 09:35:03,750-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:35:04,086-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:35:07,051-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:35:07,052-views-INFO :: topic_element
+2021-12-02 09:35:07,106-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 25
+2021-12-02 09:37:55,321-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:37:55,628-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:38:00,933-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:38:01,228-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:38:11,686-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/urls.py changed, reloading.
+2021-12-02 09:38:12,054-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:42:05,717-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:42:05,785-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:42:05,786-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:42:05,787-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718403
+2021-12-02 09:42:05,792-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:42:06,163-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:42:06,233-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:42:06,422-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:42:22,906-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:42:22,907-views-INFO :: topic_element
+2021-12-02 09:42:22,939-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 25
+2021-12-02 09:42:23,197-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:42:23,209-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 21
+2021-12-02 09:43:12,755-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:43:13,165-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:43:35,280-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:43:35,343-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:43:35,347-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718402
+2021-12-02 09:43:35,348-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:43:35,351-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:43:35,896-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:43:35,978-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:43:36,212-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:43:40,635-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:43:40,724-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:43:40,740-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:43:40,744-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718402
+2021-12-02 09:43:40,751-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:43:41,149-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:43:41,259-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:43:41,493-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:44:12,501-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:44:12,552-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718420
+2021-12-02 09:44:12,556-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:44:12,557-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:44:12,756-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:44:12,845-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:44:12,850-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:44:12,952-log-ERROR :: Internal Server Error: /api/getDataCatalogue
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 118, in getDataCatalogue
+    return JsonResponse({'data':all_data})
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/http/response.py", line 603, in __init__
+    data = json.dumps(data, cls=encoder, **json_dumps_params)
+  File "/usr/lib/python3.8/json/__init__.py", line 234, in dumps
+    return cls(
+  File "/usr/lib/python3.8/json/encoder.py", line 199, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/usr/lib/python3.8/json/encoder.py", line 257, in iterencode
+    return _iterencode(o, 0)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/serializers/json.py", line 105, in default
+    return super().default(o)
+  File "/usr/lib/python3.8/json/encoder.py", line 179, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type QuerySet is not JSON serializable
+2021-12-02 09:44:12,956-basehttp-ERROR :: "GET /api/getDataCatalogue HTTP/1.1" 500 131466
+2021-12-02 09:44:25,656-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:44:25,964-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:44:28,290-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:44:28,352-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 09:44:28,355-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:44:28,360-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:44:28,580-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:44:28,632-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:44:28,647-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:44:28,660-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:46:00,631-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:46:00,704-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:46:00,705-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:46:00,707-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718435
+2021-12-02 09:46:00,986-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:46:01,065-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:46:01,079-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:46:01,096-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:47:13,440-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:47:13,502-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 09:47:13,514-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 09:47:13,514-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 09:47:13,538-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718435
+2021-12-02 09:47:13,986-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 09:47:14,042-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:47:14,059-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:47:14,078-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:47:14,340-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 09:47:43,516-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:47:43,585-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 09:47:43,587-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:47:43,592-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:47:43,952-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:47:44,054-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:47:44,065-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:47:44,117-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:47:45,786-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:47:45,944-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 09:47:45,947-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:47:45,951-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:47:46,450-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:47:46,635-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:47:46,649-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:47:46,651-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:47:50,632-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 09:47:50,683-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 09:47:50,685-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718450
+2021-12-02 09:47:50,686-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 09:47:50,892-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 09:47:51,016-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:47:51,031-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:47:51,040-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 09:47:55,791-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}]>
+2021-12-02 09:47:55,815-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 199
+2021-12-02 09:48:27,173-views-INFO :: ***postDataCatalogue***
+2021-12-02 09:48:27,173-views-INFO :: data_element
+2021-12-02 09:48:27,206-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 25
+2021-12-02 09:48:27,336-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 09:48:27,353-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 09:48:43,792-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 09:48:43,811-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 09:48:45,346-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 09:48:45,361-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 09:54:03,866-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:54:04,170-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:55:22,857-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:55:23,158-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:55:28,563-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:55:28,893-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:56:50,599-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 09:56:50,901-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 09:57:38,953-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/urls.py changed, reloading.
+2021-12-02 09:57:39,345-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:03:39,769-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 10:03:39,833-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 10:03:39,848-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718727
+2021-12-02 10:03:39,860-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 10:03:39,863-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 10:03:40,301-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 10:03:40,358-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 10:03:40,380-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 10:03:40,386-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 10:03:40,649-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 10:03:52,764-log-WARNING :: Method Not Allowed: /api/deleteUser
+2021-12-02 10:03:52,764-basehttp-WARNING :: "POST /api/deleteUser HTTP/1.1" 405 41
+2021-12-02 10:04:19,078-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 10:04:19,418-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:05:46,147-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 10:05:46,469-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:07:21,728-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 10:07:21,861-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 10:07:21,865-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 10:07:21,866-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718695
+2021-12-02 10:07:22,052-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 10:07:22,133-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 10:07:22,149-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 10:07:22,164-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 10:07:31,942-log-ERROR :: Internal Server Error: /api/deleteUser
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 110, in deleteUser
+    user = User.objects.get(email=user_email)
+NameError: name 'user_email' is not defined
+2021-12-02 10:07:31,946-basehttp-ERROR :: "DELETE /api/deleteUser HTTP/1.1" 500 103097
+2021-12-02 10:08:03,012-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 10:08:03,328-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:08:07,390-log-WARNING :: Bad Request: /api/deleteUser
+2021-12-02 10:08:07,392-basehttp-WARNING :: "DELETE /api/deleteUser HTTP/1.1" 400 73
+2021-12-02 10:12:03,489-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 10:12:03,787-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:12:07,072-log-WARNING :: Bad Request: /api/deleteUser
+2021-12-02 10:12:07,073-basehttp-WARNING :: "DELETE /api/deleteUser HTTP/1.1" 400 73
+2021-12-02 10:12:14,212-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 10:12:14,279-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 10:12:14,289-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718691
+2021-12-02 10:12:14,291-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 10:12:14,294-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 10:12:14,812-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 10:12:14,863-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 10:12:14,875-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 10:12:14,877-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 10:12:15,106-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 10:12:17,514-views-INFO :: {}
+2021-12-02 10:12:17,588-log-ERROR :: Internal Server Error: /api/deleteUser/freddie.parker@easyjet.com
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 111, in deleteUser
+    user = User.objects.get(email=request.data['user_email'])
+KeyError: 'user_email'
+2021-12-02 10:12:17,589-basehttp-ERROR :: "DELETE /api/deleteUser/freddie.parker@easyjet.com HTTP/1.1" 500 103502
+2021-12-02 10:13:47,003-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 10:13:47,308-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 10:20:40,498-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 10:20:40,582-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 10:20:40,592-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718708
+2021-12-02 10:20:40,594-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 10:20:40,608-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 10:20:41,014-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 10:20:41,072-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 10:20:41,082-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 10:20:41,075-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 754
+2021-12-02 10:20:41,414-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 10:20:44,699-views-INFO :: {'user_email': 'freddie.parker@easyjet.com'}
+2021-12-02 10:20:44,756-basehttp-INFO :: "DELETE /api/deleteUser HTTP/1.1" 200 34
+2021-12-02 10:22:27,925-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 10:22:28,049-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718679
+2021-12-02 10:22:28,070-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 10:22:28,077-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 10:22:28,356-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 10:22:28,408-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 10:22:28,421-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 10:22:28,452-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574

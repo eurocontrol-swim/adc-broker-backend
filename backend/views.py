@@ -7,10 +7,19 @@ from rest_framework.decorators import api_view
 # from rest_framework.schemas import AutoSchema
 from django.shortcuts import render
 # from django.views.generic import TemplateView
-from .models import USER_INFO, ORGANIZATIONS
+from .models import USER_INFO, ORGANIZATIONS, DATA_CATALOGUE_ELEMENT
 from django.contrib.auth.models import User
 
 logger = logging.getLogger('adc')
+
+# Error codes
+# HTTP_200_OK
+# HTTP_400_BAD_REQUEST
+# HTTP_401_UNAUTHORIZED
+# HTTP_404_NOT_FOUND
+# HTTP_405_METHOD_NOT_ALLOWED
+# HTTP_500_INTERNAL_SERVER_ERROR
+
 
 def index(request, path = ''):
     """View function for home page of site"""
@@ -59,7 +68,7 @@ def postUser(request):
             #save new user info
             new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request.data['role'], user_organization_id=organization_id)
             new_user_info.save()
-            response = {'user' : 'new_user', 'new_user_info': 'new_user_info'}
+            response = {'message':'user created'}
         
         return JsonResponse(response)
     else:
@@ -88,6 +97,53 @@ def getUsers(request):
             # Create a list with dictionaries
             user_list.append(dict(**user, **info, **organization))
         return JsonResponse({'users':user_list})
+    else:
+        logger.info('Request method is not GET')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['DELETE'])
+@ensure_csrf_cookie
+def deleteUser(request):
+    """View function to delete user and informations"""
+    if request.method == "DELETE":
+        logger.info(request.data)
+        try:
+            user = User.objects.get(email=request.data['user_email'])
+            user.delete()
+            return JsonResponse({'message':'The user is deleted'})
+
+        except User.DoesNotExist:
+            logger.info('User does not exist')
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    else:
+        logger.info('Request method is not DELETE')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['POST'])
+@ensure_csrf_cookie
+def postDataCatalogue(request):
+    """View function for create or update data catalogue element"""
+    if request.method == "POST":
+        logger.info('***postDataCatalogue***')
+        logger.info(request.data['type'])
+        # create new data catalogue element
+        new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request.data['type'], data_path=request.data['path'], data_schema=request.data['schema'])
+        new_data_element.save()
+        return JsonResponse({'message':'data saved'})
+    else:
+        logger.info('Request method is not POST')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@ensure_csrf_cookie
+def getDataCatalogue(request):
+    """View function to get all data catalogue elements"""
+    if request.method == "GET":
+        # Get all data catalogue elements from database
+        all_data = DATA_CATALOGUE_ELEMENT.objects.values()
+        logger.info(all_data)
+        return JsonResponse({'data':list(all_data)})
     else:
         logger.info('Request method is not GET')
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
