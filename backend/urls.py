@@ -7,6 +7,11 @@ urlpatterns = [
     # url(r'login$', views.auth, name='auth'),
     url(r'api/postUser', views.postUser, name='postUser'),
     url(r'api/getUsers', views.getUsers, name='getUsers'),
+    url(r'api/deleteUser', views.deleteUser, name='deleteUser'),
+
+    url(r'api/postDataCatalogue', views.postDataCatalogue, name='postDataCatalogue'),
+    url(r'api/getDataCatalogue', views.getDataCatalogue, name='getDataCatalogue'),
+    url(r'api/deleteDataElement', views.deleteDataElement, name='deleteDataElement'),
 
     # catch-all pattern for compatibility with the Angular routes. This must be last in the list.
     url(r'^(?P<path>.*)$', views.index, name='index'),
