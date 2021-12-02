@@ -9311,3 +9311,159 @@ KeyError: 'user_email'
 2021-12-02 10:22:28,408-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
 2021-12-02 10:22:28,421-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
 2021-12-02 10:22:28,452-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:48:06,795-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 13:48:09,097-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 13:48:09,196-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 13:48:09,198-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 13:48:09,208-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 13:48:09,218-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718697
+2021-12-02 13:48:09,445-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 13:48:09,508-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:48:09,533-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 13:48:09,547-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:49:24,367-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 13:49:24,477-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 304 0
+2021-12-02 13:49:24,479-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 13:49:24,479-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 13:49:24,483-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 718730
+2021-12-02 13:49:24,632-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 13:49:24,664-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:49:24,674-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 13:49:24,698-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:52:23,029-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-02 13:52:23,324-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 13:52:33,752-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/urls.py changed, reloading.
+2021-12-02 13:52:34,049-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-02 13:52:44,376-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 13:52:44,427-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 13:52:44,460-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 13:52:44,472-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719080
+2021-12-02 13:52:44,472-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 13:52:44,963-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 13:52:45,027-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 2, 'data_path': 'all.topics', 'data_schema': 'JSON', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:52:45,062-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 287
+2021-12-02 13:52:45,068-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:52:45,303-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 13:52:58,032-views-INFO :: {'data_id': 2}
+2021-12-02 13:52:58,060-basehttp-INFO :: "DELETE /api/deleteDataElement HTTP/1.1" 200 42
+2021-12-02 13:52:58,099-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:53:02,976-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 13:53:03,016-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 13:53:03,023-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 13:53:03,023-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 13:53:03,209-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 13:53:03,263-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:53:03,286-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:53:03,288-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 196
+2021-12-02 13:53:35,802-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 13:53:35,853-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212454
+2021-12-02 13:53:35,862-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 13:53:35,865-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 13:53:35,866-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719079
+2021-12-02 13:53:36,296-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 13:53:36,342-views-INFO :: <QuerySet [{'id': 1, 'data_path': 'all.topics', 'data_schema': 'json schema', 'data_type': 'topic_element'}, {'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:53:36,364-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 196
+2021-12-02 13:53:36,371-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 13:53:36,610-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 13:53:40,415-views-INFO :: {'data_id': 1}
+2021-12-02 13:53:40,452-basehttp-INFO :: "DELETE /api/deleteDataElement HTTP/1.1" 200 42
+2021-12-02 13:53:40,462-views-INFO :: <QuerySet [{'id': 3, 'data_path': 'all.data', 'data_schema': 'json', 'data_type': 'data_element'}]>
+2021-12-02 13:53:40,478-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 98
+2021-12-02 13:54:03,909-views-INFO :: {'data_id': 3}
+2021-12-02 13:54:03,939-basehttp-INFO :: "DELETE /api/deleteDataElement HTTP/1.1" 200 42
+2021-12-02 13:54:03,944-views-INFO :: <QuerySet []>
+2021-12-02 13:54:03,955-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 12
+2021-12-02 14:02:34,058-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:02:34,123-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:02:34,132-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719475
+2021-12-02 14:02:34,135-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 304 0
+2021-12-02 14:02:34,136-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:02:34,289-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:02:34,331-views-INFO :: <QuerySet []>
+2021-12-02 14:02:34,349-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 12
+2021-12-02 14:02:34,360-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:05:13,663-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:05:13,772-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 304 0
+2021-12-02 14:05:13,776-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:05:13,779-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719489
+2021-12-02 14:05:13,781-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:05:14,018-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:05:14,076-views-INFO :: <QuerySet []>
+2021-12-02 14:05:14,083-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:05:14,088-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 12
+2021-12-02 14:07:00,317-views-INFO :: ***postDataCatalogue***
+2021-12-02 14:07:00,317-views-INFO :: data_element
+2021-12-02 14:07:00,344-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 25
+2021-12-02 14:07:00,454-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:07:00,465-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:07:07,178-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:07:07,199-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:10:43,697-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:10:43,745-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212493
+2021-12-02 14:10:43,775-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:10:43,787-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:10:43,790-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719767
+2021-12-02 14:10:43,965-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:10:44,023-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:10:44,037-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:10:44,089-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:10:45,863-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:10:45,907-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:10:45,909-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:10:45,911-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:10:46,054-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:10:46,110-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:10:46,123-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:10:46,126-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:10:46,853-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:10:46,897-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:10:46,897-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:10:46,898-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:10:47,005-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:10:47,035-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:10:47,048-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:10:47,060-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:10:47,796-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:10:47,847-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:10:47,849-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:10:47,851-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:10:47,968-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:10:47,997-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:10:48,011-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:10:48,016-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:10:49,576-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:10:49,601-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:10:49,604-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-02 14:10:49,607-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-02 14:10:49,745-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-02 14:10:49,794-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:10:49,816-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:10:49,817-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:12:50,846-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:12:50,863-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:12:52,667-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:12:54,680-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:12:54,695-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:13:47,772-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:13:47,810-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 212493
+2021-12-02 14:13:47,821-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-02 14:13:47,823-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-02 14:13:47,824-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 719741
+2021-12-02 14:13:48,199-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-02 14:13:48,276-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}]>
+2021-12-02 14:13:48,291-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 112
+2021-12-02 14:13:48,304-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574
+2021-12-02 14:13:48,442-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-02 14:14:13,884-views-INFO :: ***postDataCatalogue***
+2021-12-02 14:14:13,885-views-INFO :: topic_element
+2021-12-02 14:14:13,910-basehttp-INFO :: "POST /api/postDataCatalogue HTTP/1.1" 200 25
+2021-12-02 14:14:14,077-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}, {'id': 5, 'data_path': 'all.topics.subtopic1', 'data_schema': '', 'data_type': 'topic_element'}]>
+2021-12-02 14:14:14,095-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 209
+2021-12-02 14:14:58,084-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-02 14:14:58,133-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 304 0
+2021-12-02 14:14:58,136-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:15:05,565-basehttp-INFO :: "GET /administrator HTTP/1.1" 200 799
+2021-12-02 14:15:05,615-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-02 14:15:05,776-views-INFO :: <QuerySet [{'id': 4, 'data_path': 'all.dataElement', 'data_schema': 'json schema', 'data_type': 'data_element'}, {'id': 5, 'data_path': 'all.topics.subtopic1', 'data_schema': '', 'data_type': 'topic_element'}]>
+2021-12-02 14:15:05,797-basehttp-INFO :: "GET /api/getDataCatalogue HTTP/1.1" 200 209
+2021-12-02 14:15:05,799-basehttp-INFO :: "GET /api/getUsers HTTP/1.1" 200 574

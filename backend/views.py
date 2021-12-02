@@ -147,3 +147,22 @@ def getDataCatalogue(request):
     else:
         logger.info('Request method is not GET')
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['DELETE'])
+@ensure_csrf_cookie
+def deleteDataElement(request):
+    """View function to delete user and informations"""
+    if request.method == "DELETE":
+        logger.info(request.data)
+        try:
+            data = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['data_id'])
+            data.delete()
+            return JsonResponse({'message':'The data element is deleted'})
+
+        except DATA_CATALOGUE_ELEMENT.DoesNotExist:
+            logger.info('Data element does not exist')
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    else:
+        logger.info('Request method is not DELETE')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
