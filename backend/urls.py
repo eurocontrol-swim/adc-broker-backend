@@ -13,6 +13,12 @@ urlpatterns = [
     url(r'api/getDataCatalogue', views.getDataCatalogue, name='getDataCatalogue'),
     url(r'api/deleteDataElement', views.deleteDataElement, name='deleteDataElement'),
 
+    url(r'api/postPublisherPolicy', views.postPublisherPolicy, name='postPublisherPolicy'),
+    url(r'api/getPublisherPolicy', views.getPublisherPolicy, name='getPublisherPolicy'),
+
+    url(r'api/getOrganizationsName', views.getOrganizationsName, name='getOrganizationsName'),
+    url(r'api/getOrganizationsType', views.getOrganizationsType, name='getOrganizationsType'),
+
     # catch-all pattern for compatibility with the Angular routes. This must be last in the list.
     url(r'^(?P<path>.*)$', views.index, name='index'),
 ]

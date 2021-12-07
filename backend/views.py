@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 # from rest_framework.schemas import AutoSchema
 from django.shortcuts import render
 # from django.views.generic import TemplateView
-from .models import USER_INFO, ORGANIZATIONS, DATA_CATALOGUE_ELEMENT
+from .models import USER_INFO, ORGANIZATIONS, DATA_CATALOGUE_ELEMENT, PUBLISHER_POLICY, TRANSFORMATION_ITEM
 from django.contrib.auth.models import User
 
 logger = logging.getLogger('adc')
@@ -140,10 +140,14 @@ def postDataCatalogue(request):
 def getDataCatalogue(request):
     """View function to get all data catalogue elements"""
     if request.method == "GET":
-        # Get all data catalogue elements from database
-        all_data = DATA_CATALOGUE_ELEMENT.objects.values()
-        logger.info(all_data)
-        return JsonResponse({'data':list(all_data)})
+        policy_type = request.GET.get('policy_type', '')
+        if policy_type != '':
+            # Filter Data Catalogue Element if data_type contains 'type' or 'data' string
+            data_catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(data_type__contains=policy_type.split('_')[0]).values()
+        else:
+            # Get all data catalogue elements from database
+            data_catalogue = DATA_CATALOGUE_ELEMENT.objects.values()
+        return JsonResponse({'data':list(data_catalogue)})
     else:
         logger.info('Request method is not GET')
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
@@ -165,4 +169,97 @@ def deleteDataElement(request):
         
     else:
         logger.info('Request method is not DELETE')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
+@api_view(['POST'])
+@ensure_csrf_cookie
+def postPublisherPolicy(request):
+    """View function for create or update data catalogue element"""
+    if request.method == "POST":
+        # try if user not exist by email
+        try:
+            user = User.objects.get(email=request.data['user_email'])
+
+            # user_organization_id = USER_INFO.objects.get(user_id = user.id).user_organization_id
+
+            # TODO - Try if transformations available
+            transformations = request.data['transformations']
+            catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request.data['catalogue_id']))
+
+            # create new publisher policy
+            new_publisher_policy = PUBLISHER_POLICY.objects.create(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
+            new_publisher_policy.save()
+
+            for index, item in enumerate(transformations):
+                # create new transformation items
+                new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, publisher_policy_id=new_publisher_policy.id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
+                new_transformation_item.save()
+
+            response = {'message':'Publisher policy saved'}
+
+        except User.DoesNotExist:
+            response = {'message':'User does not exist'}
+
+        return JsonResponse(response)
+    else:
+        logger.info('Request method is not POST')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@ensure_csrf_cookie
+def getPublisherPolicy(request):
+    """View function to get all data catalogue elements"""
+    if request.method == "GET":
+        # try if user exist by email
+        try:
+            user = User.objects.get(email=request.GET.get('user_mail', ''))
+            publisher_policies_list = []
+            # Get all data catalogue elements from database
+            all_policies = PUBLISHER_POLICY.objects.filter(user_id = user.id).values('id','created_at','policy_type')
+            for policy in all_policies:
+                if TRANSFORMATION_ITEM.objects.filter(publisher_policy_id=policy['id']):
+                    transformation = TRANSFORMATION_ITEM.objects.filter(publisher_policy_id=policy['id']).values('item_order', 'item_operator', 'item_type', 'json_path', 'organization_type', 'organization_name')
+                    # Create a list with dictionaries
+                    publisher_policies_list.append({'policy':policy, 'transformations':list(transformation)})
+            response = {'policies':publisher_policies_list}
+        except User.DoesNotExist:
+            response = {'message':'User does not exist'}
+        
+        return JsonResponse(response)
+    else:
+        logger.info('Request method is not GET')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@ensure_csrf_cookie
+def getOrganizationsName(request):
+    """View function to get all orgnizations name"""
+    if request.method == "GET":
+        # try if user exist by email
+        try:
+            organizations_name = ORGANIZATIONS.objects.values_list('name', flat=True).distinct()
+            response = {'organizations_name':list(organizations_name)}
+        except ORGANIZATIONS.DoesNotExist:
+            response = {'message':'No organizations name found'}
+        
+        return JsonResponse(response)
+    else:
+        logger.info('Request method is not GET')
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+@api_view(['GET'])
+@ensure_csrf_cookie
+def getOrganizationsType(request):
+    """View function to get all orgnizations type"""
+    if request.method == "GET":
+        # try if user exist by email
+        try:
+            organizations_type = ORGANIZATIONS.objects.values_list('type', flat=True).distinct()
+            response = {'organizations_type':list(organizations_type)}
+        except ORGANIZATIONS.DoesNotExist:
+            response = {'message':'No organizations type found'}
+        
+        return JsonResponse(response)
+    else:
+        logger.info('Request method is not GET')
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
