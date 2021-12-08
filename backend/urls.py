@@ -15,6 +15,7 @@ urlpatterns = [
 
     url(r'api/postPublisherPolicy', views.postPublisherPolicy, name='postPublisherPolicy'),
     url(r'api/getPublisherPolicy', views.getPublisherPolicy, name='getPublisherPolicy'),
+    url(r'api/deletePublisherPolicy', views.deletePublisherPolicy, name='deletePublisherPolicy'),
 
     url(r'api/getOrganizationsName', views.getOrganizationsName, name='getOrganizationsName'),
     url(r'api/getOrganizationsType', views.getOrganizationsType, name='getOrganizationsType'),

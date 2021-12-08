@@ -3038,3 +3038,385 @@ TypeError: Object of type QuerySet is not JSON serializable
 2021-12-07 16:09:44,308-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
 2021-12-07 16:09:44,906-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 970
 2021-12-07 16:09:45,083-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-07 16:18:18,403-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-07 16:22:33,733-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-07 16:22:33,990-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-07 16:22:38,328-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-07 16:22:38,398-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-07 16:22:38,407-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-07 16:22:38,415-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-07 16:22:38,416-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 742714
+2021-12-07 16:22:38,614-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-07 16:22:38,702-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 970
+2021-12-07 16:22:39,254-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-07 16:24:10,045-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-07 16:24:10,245-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-07 16:24:10,265-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743025
+2021-12-07 16:24:10,280-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-07 16:24:10,283-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-07 16:24:10,646-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-07 16:24:10,810-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 970
+2021-12-07 16:24:10,976-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-07 16:24:15,694-views-INFO :: {'user_email': 'leo.grignon@thalesgroup.com', 'policy_id': 20}
+2021-12-07 16:24:15,712-views-INFO :: PUBLISHER_POLICY object (20)
+2021-12-07 16:24:15,714-basehttp-INFO :: "DELETE /api/deletePublisherPolicy HTTP/1.1" 200 46
+2021-12-07 16:24:15,758-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 970
+2021-12-07 16:24:47,094-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-07 16:24:47,387-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-07 16:24:49,163-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-07 16:24:49,252-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-07 16:24:49,273-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743025
+2021-12-07 16:24:49,288-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-07 16:24:49,309-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-07 16:24:49,659-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-07 16:24:49,719-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 970
+2021-12-07 16:24:49,922-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-07 16:24:53,608-views-INFO :: {'user_email': 'leo.grignon@thalesgroup.com', 'policy_id': 20}
+2021-12-07 16:24:53,635-views-INFO :: PUBLISHER_POLICY object (20)
+2021-12-07 16:24:53,650-basehttp-INFO :: "DELETE /api/deletePublisherPolicy HTTP/1.1" 200 46
+2021-12-07 16:24:53,703-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 666
+2021-12-07 16:25:01,041-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-07 16:25:01,303-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:32:35,957-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:33:00,151-basehttp-INFO :: "GET / HTTP/1.1" 200 799
+2021-12-08 08:33:00,364-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-08 08:33:00,376-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743025
+2021-12-08 08:33:00,388-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:33:00,389-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:33:00,754-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:33:01,003-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 08:33:04,856-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:33:05,322-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 666
+2021-12-08 08:41:19,613-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:41:19,662-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-08 08:41:19,669-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:41:19,684-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743337
+2021-12-08 08:41:19,685-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:41:20,481-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:41:20,536-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 666
+2021-12-08 08:41:20,687-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 08:48:00,448-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:48:00,748-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:52:39,730-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:52:40,057-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:52:44,544-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:52:44,591-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-08 08:52:44,609-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743295
+2021-12-08 08:52:44,615-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:52:44,616-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:52:44,779-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:52:45,000-log-ERROR :: Internal Server Error: /api/getPublisherPolicy
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 220, in getPublisherPolicy
+    catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(id=policy['catalogue_element_id']).values()
+KeyError: 'catalogue_element_id'
+2021-12-08 08:52:45,006-basehttp-ERROR :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 500 105553
+2021-12-08 08:52:45,152-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 08:52:48,680-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:52:48,760-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-08 08:52:48,762-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-08 08:52:48,763-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-08 08:52:49,564-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-08 08:52:49,646-log-ERROR :: Internal Server Error: /api/getPublisherPolicy
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 220, in getPublisherPolicy
+    catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(id=policy['catalogue_element_id']).values()
+KeyError: 'catalogue_element_id'
+2021-12-08 08:52:49,658-basehttp-ERROR :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 500 105425
+2021-12-08 08:53:10,587-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:53:10,887-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:53:20,147-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:53:20,234-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-08 08:53:20,248-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:53:20,250-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743295
+2021-12-08 08:53:20,264-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:53:20,738-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 805
+2021-12-08 08:53:20,770-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:53:21,054-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 08:54:20,713-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:54:21,040-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:54:22,636-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:54:22,765-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213443
+2021-12-08 08:54:22,773-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:54:22,774-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743295
+2021-12-08 08:54:22,775-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:54:23,038-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:54:23,130-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 08:54:23,357-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 08:57:18,251-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:57:19,054-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:57:32,543-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:57:33,005-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:57:55,758-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 08:57:56,305-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 08:59:55,191-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 08:59:55,347-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 08:59:55,381-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743731
+2021-12-08 08:59:55,406-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 08:59:55,926-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 08:59:56,177-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 08:59:56,259-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 08:59:56,546-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:01:54,980-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:01:55,050-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:01:55,120-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743739
+2021-12-08 09:01:55,140-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:01:55,150-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:01:55,374-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:01:55,459-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:01:56,081-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:02:43,695-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:02:43,786-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:02:43,797-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743770
+2021-12-08 09:02:43,800-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:02:43,804-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:02:44,117-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:02:44,208-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:02:44,387-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:06:20,240-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:06:20,349-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:06:20,375-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:06:20,379-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:06:20,382-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743773
+2021-12-08 09:06:21,147-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:06:21,241-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:06:21,434-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:08:57,648-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:08:57,694-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:08:57,700-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743756
+2021-12-08 09:08:57,703-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:08:57,710-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:08:58,001-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:08:58,060-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:08:59,020-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:11:59,043-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:11:59,078-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:11:59,109-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:11:59,110-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743835
+2021-12-08 09:11:59,112-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:11:59,345-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:11:59,418-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:12:00,048-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:12:01,583-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:14:37,997-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:14:38,098-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:14:38,104-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743851
+2021-12-08 09:14:38,112-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:14:38,116-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:14:39,170-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:14:39,289-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:14:39,442-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:14:41,395-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:19:39,169-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:19:39,278-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:19:39,299-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:19:39,305-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 743993
+2021-12-08 09:19:39,311-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:19:39,536-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:19:39,599-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:19:40,166-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:19:45,788-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:20:55,945-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:20:55,975-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:20:55,991-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744022
+2021-12-08 09:20:55,999-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:20:56,002-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:20:56,233-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:20:56,280-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:20:56,767-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:21:14,133-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:21:18,729-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:21:23,799-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:23:31,786-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:23:31,823-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:23:31,829-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744138
+2021-12-08 09:23:31,838-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:23:31,840-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:23:32,088-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:23:32,181-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:23:32,359-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:23:34,219-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:39,709-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:24:39,753-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:24:39,759-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744146
+2021-12-08 09:24:39,766-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:24:39,770-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:24:40,017-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:24:40,093-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:24:40,214-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:24:45,502-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:52,472-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:53,326-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:54,058-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:54,589-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:55,105-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:24:55,819-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:42:02,907-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:42:03,241-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:42:11,827-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:42:11,919-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:42:11,927-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744278
+2021-12-08 09:42:11,932-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:42:11,934-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:42:12,758-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:42:12,858-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:42:13,048-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:44:37,731-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:44:37,756-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:44:37,766-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744278
+2021-12-08 09:44:37,782-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:44:37,794-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:44:38,035-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:44:38,114-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 778
+2021-12-08 09:44:38,270-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:44:40,165-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=topic_based HTTP/1.1" 200 204
+2021-12-08 09:44:57,489-log-ERROR :: Internal Server Error: /api/postPublisherPolicy
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 192, in postPublisherPolicy
+    publisher_policy.update(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
+AttributeError: 'PUBLISHER_POLICY' object has no attribute 'update'
+2021-12-08 09:44:57,491-basehttp-ERROR :: "POST /api/postPublisherPolicy HTTP/1.1" 500 105568
+2021-12-08 09:46:28,225-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:46:28,556-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:46:40,127-log-ERROR :: Internal Server Error: /api/postPublisherPolicy
+Traceback (most recent call last):
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/exception.py", line 47, in inner
+    response = get_response(request)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/core/handlers/base.py", line 181, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/decorators/csrf.py", line 54, in wrapped_view
+    return view_func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/views/generic/base.py", line 70, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/rest_framework/decorators.py", line 50, in handler
+    return func(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/utils/decorators.py", line 130, in _wrapped_view
+    response = view_func(request, *args, **kwargs)
+  File "/home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py", line 192, in postPublisherPolicy
+    transformation_item = TRANSFORMATION_ITEM.objects.get(publisher_policy_id = policy_id)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/db/models/manager.py", line 85, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "/home/grignon/.local/lib/python3.8/site-packages/django/db/models/query.py", line 439, in get
+    raise self.model.MultipleObjectsReturned(
+backend.models.TRANSFORMATION_ITEM.MultipleObjectsReturned: get() returned more than one TRANSFORMATION_ITEM -- it returned 3!
+2021-12-08 09:46:40,135-basehttp-ERROR :: "POST /api/postPublisherPolicy HTTP/1.1" 500 114745
+2021-12-08 09:46:53,473-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:46:53,760-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:47:03,567-basehttp-INFO :: "POST /api/postPublisherPolicy HTTP/1.1" 200 37
+2021-12-08 09:47:03,655-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:47:19,832-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:48:02,629-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:48:02,747-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 304 0
+2021-12-08 09:48:02,764-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 304 0
+2021-12-08 09:48:02,766-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 304 0
+2021-12-08 09:48:03,214-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 304 0
+2021-12-08 09:48:03,353-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:48:22,975-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:48:23,046-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:48:23,053-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744333
+2021-12-08 09:48:23,056-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:48:23,059-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:48:23,429-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:48:23,457-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:48:23,748-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:48:27,639-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:48:44,785-basehttp-INFO :: "GET /api/getOrganizationsName HTTP/1.1" 200 56
+2021-12-08 09:48:57,015-basehttp-INFO :: "POST /api/postPublisherPolicy HTTP/1.1" 200 37
+2021-12-08 09:48:57,090-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:50:56,161-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:50:57,349-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:51:15,719-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:51:28,944-views-INFO :: None
+2021-12-08 09:51:28,996-basehttp-INFO :: "POST /api/postPublisherPolicy HTTP/1.1" 200 37
+2021-12-08 09:51:29,134-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:57:27,548-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:57:27,811-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:57:30,769-basehttp-INFO :: "GET /publisher HTTP/1.1" 200 799
+2021-12-08 09:57:30,815-basehttp-INFO :: "GET /static/styles.css HTTP/1.1" 200 213458
+2021-12-08 09:57:30,835-basehttp-INFO :: "GET /static/polyfills.js HTTP/1.1" 200 37751
+2021-12-08 09:57:30,837-basehttp-INFO :: "GET /static/runtime.js HTTP/1.1" 200 899
+2021-12-08 09:57:30,846-basehttp-INFO :: "GET /static/main.js HTTP/1.1" 200 744333
+2021-12-08 09:57:31,131-basehttp-INFO :: "GET /static/assets/img/EUROCONTROL-logo-boxed-rgb.png HTTP/1.1" 200 9414
+2021-12-08 09:57:31,188-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 609
+2021-12-08 09:57:31,337-basehttp-INFO :: "GET /static/favicon.ico HTTP/1.1" 200 948
+2021-12-08 09:57:42,017-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:57:51,038-views-INFO :: None
+2021-12-08 09:57:51,071-basehttp-INFO :: "POST /api/postPublisherPolicy HTTP/1.1" 200 37
+2021-12-08 09:57:51,124-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 1014
+2021-12-08 09:58:06,534-basehttp-INFO :: "GET /api/getDataCatalogue?policy_type=data_structure_based HTTP/1.1" 200 112
+2021-12-08 09:58:15,512-basehttp-INFO :: "GET /api/getOrganizationsName HTTP/1.1" 200 56
+2021-12-08 09:58:22,922-views-INFO :: 22
+2021-12-08 09:58:22,948-basehttp-INFO :: "POST /api/postPublisherPolicy HTTP/1.1" 200 37
+2021-12-08 09:58:23,023-basehttp-INFO :: "GET /api/getPublisherPolicy?user_mail=leo.grignon@thalesgroup.com HTTP/1.1" 200 1026
+2021-12-08 09:58:56,979-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:58:57,322-autoreload-INFO :: Watching for file changes with StatReloader
+2021-12-08 09:59:07,838-autoreload-INFO :: /home/grignon/Bureau/EuroControl_ADC/adc_backend/backend/views.py changed, reloading.
+2021-12-08 09:59:08,138-autoreload-INFO :: Watching for file changes with StatReloader
