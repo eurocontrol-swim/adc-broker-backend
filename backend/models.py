@@ -16,7 +16,7 @@ class ORGANIZATIONS(models.Model):
         (network_manager, _('Network manager')),
         (meteorological_service_provider, _('Meteorological service provider')),
     )
-    type = models.CharField(_('type'), default=airport_operator, choices=TYPES, max_length=255)
+    type = models.CharField(_('type'), choices=TYPES, max_length=255, null=True)
 
     class Meta:
         db_table = 'ORGANIZATION'
@@ -47,13 +47,13 @@ class DATA_CATALOGUE_ELEMENT(models.Model):
         (topic_element, _('topic_element')),
         (data_element, _('data_element')),
     )
-    data_type = models.CharField(_('data_type'), default=topic_element, choices=DATA_TYPES, max_length=255)
+    data_type = models.CharField(_('data_type'), choices=DATA_TYPES, max_length=255, null=True)
 
     class Meta:
         db_table = 'DATA_CATALOGUE_ELEMENT'
 
 class PUBLISHER_POLICY(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
 
     topic_based = 'TOPIC BASED'
@@ -63,7 +63,7 @@ class PUBLISHER_POLICY(models.Model):
         (data_structure_based, _('data_structure_based')),
     )
     policy_type = models.CharField(_('policy_type'), default=topic_based, choices=POLICY_TYPES, max_length=255)
-    catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE)
+    catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'PUBLISHER_POLICY'
@@ -72,7 +72,7 @@ class SUBSCRIBER_POLICY(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
     delivery_end_point = models.CharField(max_length=255)
-    catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE)
+    catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'SUBSCRIBER_POLICY'
@@ -80,19 +80,33 @@ class SUBSCRIBER_POLICY(models.Model):
 class TRANSFORMATION_ITEM(models.Model):
     publisher_policy = models.ForeignKey(PUBLISHER_POLICY, on_delete=models.CASCADE, null=True)
     subscriber_policy = models.ForeignKey(SUBSCRIBER_POLICY, on_delete=models.CASCADE, null=True)
-    organization = models.ForeignKey(ORGANIZATIONS, on_delete=models.CASCADE)
-    data_schema = models.CharField(max_length=500)
+    organization_name = models.CharField(max_length=255, null=True)
+    
+    airport_operator = 'Airport operator'
+    airspace_user = 'Airspace user'
+    ground_handler = 'Ground handler'
+    network_manager = 'Network manager'
+    meteorological_service_provider = 'Meteorological service provider'
+    TYPES = (
+        (airport_operator, _('Airport operator')),
+        (airspace_user, _('Airspace user')),
+        (ground_handler, _('Ground handler')),
+        (network_manager, _('Network manager')),
+        (meteorological_service_provider, _('Meteorological service provider')),
+    )
+    organization_type = models.CharField(_('type'), choices=TYPES, max_length=255, null=True)
+
     json_path = models.CharField(max_length=500)
 
-    organization_type = 'Organization type'
-    organization_name = 'Organization name'
+    orga_type = 'Organization type'
+    orga_name = 'Organization name'
     data_based = 'Data based'
     ITEM_TYPES = (
-        (organization_type, _('organization_type')),
-        (organization_name, _('organization_name')),
+        (orga_type, _('organization_type')),
+        (orga_name, _('organization_name')),
         (data_based, _('data_based')),
     )
-    item_type = models.CharField(_('item_type'), default=organization_type, choices=ITEM_TYPES, max_length=255)
+    item_type = models.CharField(_('item_type'), null=False, choices=ITEM_TYPES, max_length=255)
 
     endpoint_restriction = 'Endpoint restriction'
     payload_extraction = 'Payload extraction'
@@ -100,7 +114,7 @@ class TRANSFORMATION_ITEM(models.Model):
         (endpoint_restriction, _('endpoint_restriction')),
         (payload_extraction, _('payload_extraction')),
     )
-    item_operator = models.CharField(_('item_operator'), default=endpoint_restriction, choices=ITEM_OPERATORS, max_length=255)
+    item_operator = models.CharField(_('item_operator'), null=False, choices=ITEM_OPERATORS, max_length=255)
     item_order = models.IntegerField(null=True)
 
     class Meta:
