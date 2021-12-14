@@ -128,12 +128,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Add these new lines
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+BROKER_AMQP_URL = 'amqps://adcbroker:5771/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

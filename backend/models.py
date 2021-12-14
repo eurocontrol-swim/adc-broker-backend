@@ -62,16 +62,23 @@ class PUBLISHER_POLICY(models.Model):
         (topic_based, _('topic_based')),
         (data_structure_based, _('data_structure_based')),
     )
-    policy_type = models.CharField(_('policy_type'), default=topic_based, choices=POLICY_TYPES, max_length=255)
+    policy_type = models.CharField(_('policy_type'), choices=POLICY_TYPES, max_length=255)
     catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE, null=True)
 
     class Meta:
         db_table = 'PUBLISHER_POLICY'
 
 class SUBSCRIBER_POLICY(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)
-    delivery_end_point = models.CharField(max_length=255)
+    delivery_end_point = models.CharField(max_length=255, null=True)
+    topic_based = 'TOPIC BASED'
+    data_structure_based = 'DATA STRUCTURE BASED'
+    POLICY_TYPES = (
+        (topic_based, _('topic_based')),
+        (data_structure_based, _('data_structure_based')),
+    )
+    policy_type = models.CharField(_('policy_type'), choices=POLICY_TYPES, max_length=255)
     catalogue_element = models.ForeignKey(DATA_CATALOGUE_ELEMENT, on_delete=models.CASCADE, null=True)
 
     class Meta:
