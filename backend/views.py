@@ -12,6 +12,10 @@ from django.contrib.auth.models import User
 from adc_backend.settings import BROKER_AMQP_URL
 from unidecode import unidecode
 
+import backend.PublisherPolicyManager as PublisherPolicyManager
+import backend.SubscriberPolicyManager as SubscriberPolicyManager
+from backend.Policy import *
+
 logger = logging.getLogger('adc')
 
 # Error codes
@@ -93,32 +97,12 @@ def postPublisherPolicy(request):
     if request.method == "POST":
         # try if user not exist by email
         try:
-            user = User.objects.get(email=request.data['user_email'])
+            user_data = User.objects.get(email=request.data['user_email'])
 
-            policy_id = request.data['policy_id']
-            transformations = request.data['transformations']
-            catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request.data['catalogue_id']))
+            policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
+            SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
 
-            # Try if publisher policy exist for update
-            try:
-                publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id)
-                publisher_policy.__dict__.update(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
-                transformation_item = TRANSFORMATION_ITEM.objects.filter(publisher_policy_id = policy_id)
-                transformation_item.delete()
-
-            except PUBLISHER_POLICY.DoesNotExist:
-                # create new publisher policy
-                new_publisher_policy = PUBLISHER_POLICY.objects.create(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
-                new_publisher_policy.save()
-                policy_id = new_publisher_policy.id
-
-            for index, item in enumerate(transformations):
-                # create new transformation items
-                new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, publisher_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
-                new_transformation_item.save()
-
-                response = {'message':'Publisher policy saved'}
-
+            response = {'message':'Publisher policy saved'}
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
 
@@ -169,9 +153,9 @@ def deletePublisherPolicy(request):
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
-                # Match policy with user
-                publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'], user_id=user.id)
-                publisher_policy.delete()
+                PublisherPolicyManager.deletePolicy(user, request.data)
+                SubscriberPolicyManager.removeStaticRoute(request.data['policy_id'])
+
                 return JsonResponse({'message':'The publisher policy is deleted'})
 
             except PUBLISHER_POLICY.DoesNotExist:
@@ -227,39 +211,11 @@ def postSubscriberPolicy(request):
     if request.method == "POST":
         # try if user not exist by email
         try:
-            user = User.objects.get(email=request.data['user_email'])
+            user_data = User.objects.get(email=request.data['user_email'])
 
-            policy_id = request.data['policy_id']
-            transformations = request.data['transformations']
-            # delivery_end_point=request.data['delivery_end_point'],
-            catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request.data['catalogue_id']))
+            SubscriberPolicyManager.addPolicy(user_data, request.data)
 
-            # Try if subscriber policy exist for update
-            try:
-                subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=policy_id)
-                subscriber_policy.__dict__.update(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
-                transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
-                transformation_item.delete()
-
-            except SUBSCRIBER_POLICY.DoesNotExist:
-                # create new subscriber policy
-                new_subscriber_policy = SUBSCRIBER_POLICY.objects.create(user_id=user.id, policy_type=request.data['policy_type'], catalogue_element_id=catalogue_element.id)
-                new_subscriber_policy.save()
-                policy_id = new_subscriber_policy.id
-
-                # Get user organization id
-                organization_id = USER_INFO.objects.get(user_id=user.id).user_organization_id
-
-                # Save the delivery end point
-                end_point = f"{BROKER_AMQP_URL}{organization_id}.{user.first_name}.{user.last_name}.{policy_id}"
-                subscriber_policy = SUBSCRIBER_POLICY.objects.filter(id=policy_id).update(delivery_end_point=unidecode(end_point.lower()))
-
-            for index, item in enumerate(transformations):
-                # create new transformation items
-                new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, subscriber_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
-                new_transformation_item.save()
-
-                response = {'message':'Subscriber policy saved'}
+            response = {'message':'Subscriber policy saved'}
 
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
@@ -311,9 +267,8 @@ def deleteSubscriberPolicy(request):
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
-                # Match policy with user
-                subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'], user_id=user.id)
-                subscriber_policy.delete()
+                SubscriberPolicyManager.deletePolicy(user, request.data)
+
                 return JsonResponse({'message':'The subscriber policy is deleted'})
 
             except SUBSCRIBER_POLICY.DoesNotExist:
