@@ -37,6 +37,7 @@ class AmqpsSender(AmqpsClient):
         event.container.create_sender(self.url)
 
     def on_sendable(self, event):
+        # TODO add parametrable message
         print("Send message")
         if event.sender.credit:
             id = random.randrange(10000000)
@@ -52,4 +53,5 @@ class AmqpsReceiver(AmqpsClient):
         event.container.create_receiver(self.url)
 
     def on_message(self, event):
+        # todo print message
         print("Message received")

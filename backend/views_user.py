@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
@@ -16,7 +17,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-import logging
+import backend.DataBrokerProxy as DataBrokerProxy
+
 logger = logging.getLogger('adc')
 
 @api_view(['POST'])
@@ -62,6 +64,8 @@ def postUser(request):
             # new_user.set_password(request.data['password'])
             new_user.save()
 
+            organization_id = 0
+
             try:
                 organization = ORGANIZATIONS.objects.get(name=request.data['organization_name'])
                 if request.data['organization_type'] == organization.type:
@@ -85,6 +89,13 @@ def postUser(request):
             new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request.data['role'], user_organization_id=organization_id)
             new_user_info.save()
             response = {'message':'user created'}
+
+            if new_user_info.user_role == 'subscriber':
+                # create user in the broker
+                queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.first_name, new_user.last_name)
+                broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.first_name, new_user.last_name)
+                # TODO handle password
+                DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)
         
         return JsonResponse(response)
     else:
@@ -128,7 +139,14 @@ def deleteUser(request):
         #     user = User.objects.get(email=request.data['user_email'], role='administration')
         try:
             user = User.objects.get(email=request.data['user_email'])
+
+            if USER_INFO.objects.get(user_id=user.id).user_role == 'subscriber':
+                # delete user in the broker
+                broker_user_name = DataBrokerProxy.generateBrokerUsername(user.first_name, user.last_name)
+                DataBrokerProxy.deleteUser(broker_user_name)
+
             user.delete()
+
             return JsonResponse({'message':'The user is deleted'})
 
         except User.DoesNotExist:

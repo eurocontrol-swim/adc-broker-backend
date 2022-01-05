@@ -38,10 +38,12 @@ function stop
 
 # $1 user
 # $2 password
+# $3 queue prefix
 function add_user
 {
     local user=$1
     local password=$2
+    local queue_prefix=$3
 
     if [ -z "$user" ]
     then
@@ -55,12 +57,18 @@ function add_user
         return
     fi
 
+    if [ -z "$queue_prefix" ]
+    then
+        echo "Missing parameter queue_prefix"
+        return
+    fi
+
     echo "Adding user $user..."
 
     local command="./adc_broker/bin/artemis user add --user-command-user $user --user-command-password $password --role $user --user admin --password admin"
     sudo docker exec ${container_name} ${command}
 
-    add_consuming_permission_for_user $user $user.\#
+    add_consuming_permission_for_user ${user} ${queue_prefix}\#
 }
 
 # $1 user
@@ -109,11 +117,9 @@ function add_consuming_permission_for_user
 }
 
 # $1 user
-# $2 pattern
 function remove_consuming_permission_for_user
 {
     local user=$1
-    local pattern=$2
 
     if [ -z "$user" ]
     then
@@ -121,16 +127,11 @@ function remove_consuming_permission_for_user
         return
     fi
 
-    if [ -z "$pattern" ]
-    then
-        echo "Missing parameter pattern"
-        return
-    fi
-
     echo "Removing the consume permission for user $user..."
 
     # modify broker.xml to remove the consume permission for the user (the broker reload it's configuration if the config file is modified)
-    sudo docker exec ${container_name} sed -i '/<security-setting match="'${pattern}'">/d' adc_broker/etc/broker.xml
+    local line_to_del='<security-setting match=".*"> <permission type="send" roles="amq"/> <permission type="consume" roles="'${user}', amq"/> </security-setting>'
+    sudo docker exec ${container_name} sed -i "|$line_to_del|d" adc_broker/etc/broker.xml
 }
 
 # $1 address

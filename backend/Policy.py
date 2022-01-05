@@ -15,13 +15,17 @@ class ADCUser:
         self.__info_data = USER_INFO.objects.get(user_id=user_data.id)
         self.__organization_data = self.__info_data.user_organization
 
-    def getOrganizationType(self):
+    def getOrganizationType(self) -> str:
         """Get the organization type of the user"""
         return self.__organization_data.type
 
-    def getOrganizationName(self):
+    def getOrganizationName(self) -> str:
         """Get the organization name of the user"""
         return self.__organization_data.name
+
+    def getOrganizationId(self) -> int:
+        """Get the organization id of the user"""
+        return self.__organization_data.id
 
 class Endpoint:
     """Endpoint of a message"""
@@ -64,15 +68,15 @@ class TransformationItem:
           policy : Policy object to check
         """
         if self.data.item_type == "organization_type":
-            logger.debug("organization_type : %s == %s" % (self.data.organization_type, policy.user.getOrganizationType()))
+            logger.debug(f"organization_type : {self.data.organization_type} == {policy.user.getOrganizationType()}")
             return self.data.organization_type == policy.user.getOrganizationType()
         elif self.data.item_type == "organization_name":
-            logger.debug("organization_name : %s == %s" % (self.data.organization_name, policy.user.getOrganizationName()))
+            logger.debug(f"organization_name : {self.data.organization_name}, {policy.user.getOrganizationName()}")
             return self.data.organization_name == policy.user.getOrganizationName()
         elif self.data.item_type == "data_based":
-            logger.warn("Unhandled case : %s" % self.data.item_type)
+            logger.warn(f"Unhandled case : {self.data.item_type}")
         else:
-            logger.warn("Unhandled case : %s" % self.data.item_type)
+            logger.warn(f"Unhandled case : {self.data.item_type}")
 
         return False
 
@@ -125,7 +129,8 @@ class PublisherPolicy(Policy):
         """
         try:
             policy_data =  PUBLISHER_POLICY.objects.get(id=id)
-            return Policy(policy_data)
+            transformations_data = TRANSFORMATION_ITEM.objects.filter(publisher_policy_id=id)
+            return Policy(policy_data, transformations_data)
         except PUBLISHER_POLICY.DoesNotExist:
             return None
 
@@ -147,7 +152,8 @@ class SubscriberPolicy(Policy):
         """
         try:
             policy_data =  SUBSCRIBER_POLICY.objects.get(id=id)
-            return Policy(policy_data)
+            transformations_data = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id=id)
+            return Policy(policy_data, transformations_data)
         except SUBSCRIBER_POLICY.DoesNotExist:
             return None
 
