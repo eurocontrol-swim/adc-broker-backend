@@ -7,6 +7,21 @@ container_name="artemis_broker"
 
 certificates_dir=../certificates
 
+function usage
+{
+    echo 'usage : manage_artemis [action]'
+    echo 'action :'
+    echo ' - start'
+    echo ' - stop'
+    echo ' - restart'
+    echo ' - add-user'
+    echo ' - rm-user'
+    echo ' - create-address'
+    echo ' - delete-address'
+    echo ' - create-queue'
+    echo ' - delete-queue'
+}
+
 function build
 {
     echo "Building artemis broker image..."
@@ -204,7 +219,11 @@ function delete_queue
 
 #-------------- MAIN ---------------------------
 
-[ -n "$1" ] || exit 1
+if [ -z "$1" ]
+then
+    usage
+    exit
+fi
 
 action=$1
 shift
@@ -243,4 +262,5 @@ case ${action} in
         ;;
     *)
         echo "Unknown action : \"$action\""
+        usage
 esac

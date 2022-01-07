@@ -4,10 +4,13 @@ from proton.reactor import Container
 from backend.amqp.AmqpsClient import *
 
 parser = optparse.OptionParser(usage="usage: %prog [options]",
-                               description="Send messages to the supplied address.")
+                               description="Receive messages from the supplied url and address.")
 
-parser.add_option("-a", "--address", default="amqps://admin:admin@localhost:5771/default",
-                  help="address to which messages are received (default %default)")
+parser.add_option("-u", "--url", default="amqps://admin:admin@localhost:5771/",
+                  help="url to which messages are sent (default %default)")
+
+parser.add_option("-a", "--address", default="default",
+                  help="queue or topic where the messages are sent (default %default)")
 
 parser.add_option("-c", "--certificates", default="../../../certificates/certs/",
                   help="directory containing the SSL certificates (default %default)")
@@ -26,6 +29,6 @@ if(not os.path.isfile(trusted_ca) or
    exit()
 
 try:
-    Container(AmqpsReceiver(opts.address, trusted_ca, client_certificate, client_private_key, client_password)).run()
+    Container(AmqpsReceiver(opts.url + opts.address, trusted_ca, client_certificate, client_private_key, client_password)).run()
 except KeyboardInterrupt:
     pass
