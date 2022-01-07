@@ -5,6 +5,7 @@ from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, DA
 from adc_backend.settings import BROKER_AMQP_URL
 from backend.Policy import *
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
+import backend.DataBrokerProxy as DataBrokerProxy
 
 logger = logging.getLogger('adc')
 _static_routes = {}
@@ -23,7 +24,7 @@ def addPolicy(user_data, request_data):
         transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
         transformation_item.delete()
 
-        logger.info("Updating subscriber policy %s" % policy_id)
+        logger.info(f"Updating subscriber policy {policy_id}")
 
     except SUBSCRIBER_POLICY.DoesNotExist:
         # create new subscriber policy
@@ -35,10 +36,16 @@ def addPolicy(user_data, request_data):
         organization_id = USER_INFO.objects.get(user_id=user_data.id).user_organization_id
 
         # Save the delivery end point
-        end_point = f"{BROKER_AMQP_URL}{organization_id}.{user_data.first_name}.{user_data.last_name}.{policy_id}"
+        queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user_data.first_name, user_data.last_name)
+        queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
+        end_point = f"{BROKER_AMQP_URL}{queue_name}"
         subscriber_policy = SUBSCRIBER_POLICY.objects.filter(id=policy_id).update(delivery_end_point=unidecode(end_point.lower()))
 
-        logger.info("Creating subscriber policy %s" % policy_id)
+        logger.info(f"Creating subscriber policy {policy_id}")
+
+        # Create the corresponding queue in the broker
+        DataBrokerProxy.createQueue(queue_name)
+
 
     transformations_data = []
 
@@ -57,7 +64,14 @@ def deletePolicy(user_data, request_data) -> None:
     subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=policy_id, user_id=user_data.id)
     subscriber_policy.delete()
 
-    logger.info("Deleting subscriber policy %s" % policy_id)
+    logger.info(f"Deleting subscriber policy {policy_id}")
+
+    adc_user = ADCUser(user_data)
+
+    # delete the corresponding queue in the broker
+    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.first_name, user_data.last_name)
+    queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
+    DataBrokerProxy.deleteQueue(queue_name)
 
     # when a subscriber is deleted all the publisher may have their endpoints modified so we update all the routes
     SubscriberPolicyManager.updateStaticRouting()
@@ -76,7 +90,7 @@ def getAllPolicies():
 def findStaticRouting(publisher_policy, subscriber_policies = None):
     """Find all the static endpoints for a publisher policy and store the result"""
 
-    logger.info("Searching static routing for policy %s" % str(publisher_policy.getId()))
+    logger.info(f"Searching static routing for policy {str(publisher_policy.getId())}")
 
     # to find a static route we take all the endpoint available and remove the ones who doesn't match restrictions
     endpoints = []
@@ -108,9 +122,9 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
     # find all the endpoints who have an uncompatible restriction with the publisher_policy
     logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
     for endpoint in endpoints:
-        logger.debug("Endpoint : %s" % endpoint.subscriber_policy.getEndPointAddress())
+        logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
         for transformation in endpoint.subscriber_policy.transformations:
-            logger.debug("Transformation : %s" % transformation.data.id)
+            logger.debug(f"Transformation : {transformation.data.id}")
             if(transformation.isStatic() and
                not transformation.checkRestriction(publisher_policy)):
                 to_remove.append(endpoint)
@@ -121,12 +135,12 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
         endpoints.remove(endpoint)
 
     if len(endpoints) > 0:
-        logger.info("Static endpoints found for policy %s :" % str(publisher_policy.getId()))
+        logger.info(f"Static endpoints found for policy {str(publisher_policy.getId())} :")
 
         for endpoint in endpoints:
-            logger.info(" - %s : %s" % (str(endpoint.subscriber_policy.getId()), endpoint.subscriber_policy.getEndPointAddress()))
+            logger.info(f" - {str(endpoint.subscriber_policy.getId())} : {endpoint.subscriber_policy.getEndPointAddress()}")
     else:
-        logger.info("No static endpoint found for policy %s" % str(publisher_policy.getId()))
+        logger.info(f"No static endpoint found for policy {str(publisher_policy.getId())}")
     
     _static_routes[publisher_policy.getId()] = endpoints
 
