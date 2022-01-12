@@ -36,6 +36,8 @@ Run `python manage.py makemigrations` to generate a new migration.
 Run `python manage.py migrate` to apply migrations.
 
 ## Create certificates for TLS connections
+Java is needed to get the keytool command
+Run `export PATH=${PATH}:<path to JDK>/bin/`
 Run `cd certificates`
 Run `./createCertificates.sh`
 
