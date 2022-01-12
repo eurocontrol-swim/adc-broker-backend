@@ -8,11 +8,17 @@ from proton.reactor import Container
 logger = logging.getLogger('adc')
 
 class DataBrokerProxy:
+    """Allow to administrate and to connect to the broker"""
+
+    """Amqp client"""
     __amqps_client = None
+    """Thread to run the client on background"""
     __thread = None
 
     @staticmethod
     def startClient():
+        """Start the amqp client"""
+        
         if DataBrokerProxy.__amqps_client == None:
             logger.info("Starting AMQPS client")
             DataBrokerProxy.__amqps_client = AmqpsSender(settings.BROKER_AMQPS_URL, settings.AMQPS_TRUSTED_CA, settings.AMQPS_CLIENT_CERTIFICATE, settings.AMQPS_CLIENT_PRIVATE_KEY, settings.AMQPS_CLIENT_PASSWORD)
@@ -22,10 +28,11 @@ class DataBrokerProxy:
 
     @staticmethod
     def _run_container(container):
+        """Method used by the thread of the amqp client"""
         try:
             container.run()
         except KeyboardInterrupt:
-            logger.info("Exit")
+            pass
 
     @staticmethod
     def generateQueuePrefix(organization_id, username):
@@ -44,11 +51,25 @@ class DataBrokerProxy:
         return f"{user_first_name}.{user_last_name}"
 
     @staticmethod
-    def publishData(data_payload, endpoint):
-        DataBrokerProxy.__amqps_client.send(data_payload, endpoint)
+    def publishData(data_payload, address):
+        """
+        Publish data on the broker
+         - data_payload : body of the message
+         - address address of the queue/topic
+        """
+        DataBrokerProxy.__amqps_client.send(data_payload, address)
+        # TODO get a result to know if the message is succesfully sent or not
 
     @staticmethod
     def createUser(user_name, password, queue_prefix):
+        """
+        Create a user in the broker
+         - user_name : username 
+         - password : password
+         - queue_prefix : queue prefix used to allow the user access. 
+           The user will be allowed to consume messages to any queue starting with this string.
+        """
+
         logger.info(f"Creating user {user_name} in the broker...")
         result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} add-user {user_name} {password} {queue_prefix}")
 
@@ -57,6 +78,11 @@ class DataBrokerProxy:
 
     @staticmethod
     def deleteUser(user_name):
+        """
+        Delete a user in the broker
+         - user_name : username 
+        """
+
         logger.info(f"Deleting user {user_name} in the broker...")
         result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} remove-user {user_name}")
 
@@ -65,6 +91,11 @@ class DataBrokerProxy:
 
     @staticmethod
     def createQueue(name):
+        """
+        Create a queue in the broker and in the client
+         - name : address of the queue
+        """
+
         logger.info(f"Creating queue {name}...")
         result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} create-queue {name}")
 
@@ -76,6 +107,11 @@ class DataBrokerProxy:
         
     @staticmethod
     def deleteQueue(name):
+        """
+        Delete a queue in the broker and in the client
+         - name : address of the queue
+        """
+
         logger.info(f"Deleting queue {name}...")
         result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} delete-queue {name}")
 

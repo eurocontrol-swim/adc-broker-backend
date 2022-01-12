@@ -128,7 +128,7 @@ class AmqpsSender(AmqpsClient):
 
     def send(self, message_body, address):
         """
-        Send a message to an endpoint
+        Send a message to an endpoint (ascynchronously)
          message_body : content of the message
          address : address of the endpoint
         """

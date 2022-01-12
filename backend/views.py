@@ -282,8 +282,10 @@ def publishMessage(request):
         
         try:
             # TODO We need to update the static routes at the start of the application
+            # TODO check if the user who sent this request have access to the policy
             SubscriberPolicyManager.updateStaticRouting()
 
+            # TODO get this parameters from the request
             policy_id = 1
             message_body = "coucou"
             endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
@@ -295,6 +297,7 @@ def publishMessage(request):
                 logger.info(f"No endpoint found for policy {policy_id}.")
                 return JsonResponse({'message':'no endpoint found'})
         except any:
+            # TODO handle exceptions and returns better.
             logger.error("woops")
             return JsonResponse({'message':'unknown error occured'})
 
