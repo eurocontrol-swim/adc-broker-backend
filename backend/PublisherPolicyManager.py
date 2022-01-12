@@ -7,6 +7,7 @@ logger = logging.getLogger('adc')
 
 def addPolicy(user_data, request_data) -> int:
     """Add or update a publisher policy in the database"""
+
     policy_id = request_data['policy_id']
     transformations = request_data['transformations']
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
@@ -33,6 +34,9 @@ def addPolicy(user_data, request_data) -> int:
         new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, publisher_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
         new_transformation_item.save()
 
+    # TODO try to build the policy with the database datas instead of re-requesting with the id
+    SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+
     return policy_id
 
 def deletePolicy(user_data, request_data):
@@ -41,5 +45,7 @@ def deletePolicy(user_data, request_data):
     # Match policy with user
     publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id, user_id=user_data.id)
     publisher_policy.delete()
+
+    SubscriberPolicyManager.removeStaticRoute(policy_id)
 
     logger.info("Deleting publisher policy %s" % policy_id)
