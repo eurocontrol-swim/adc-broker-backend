@@ -85,6 +85,11 @@ class TransformationItem:
         pass
 
 class Policy:
+    """Data structure base type string"""
+    TYPE_DATA = 'data_structure_based'
+    """Topic based type string"""
+    TYPE_TOPIC = 'topic_based'
+
     """Generic class to represent a policy"""
     def __init__(self, policy_data, transformations_data, user_data = None) -> None:
         """
@@ -106,6 +111,33 @@ class Policy:
 
     def getId(self) -> int:
         return self._policy_data.id
+
+    def getType(self) -> str:
+        return self._policy_data.policy_type
+
+    def getTopic(self) -> str:
+        if self.getType() == Policy.TYPE_TOPIC:
+            return self._policy_data.catalogue_element.data_path
+        else:
+            return ''
+
+    def checkTopicMatch(self, other_policy) -> bool:
+        """Check if the topic are matching with an other policy"""
+
+        # if both policies are TOPIC policies we compare the topics values
+        if self.getType() == Policy.TYPE_TOPIC and other_policy.getType() == Policy.TYPE_TOPIC:
+            logger.debug(f"{self.getTopic()} == {other_policy.getTopic()} -> {self.getTopic() == other_policy.getTopic()}")
+            return self.getTopic() == other_policy.getTopic()
+
+        # if both policies are not TOPIC policies we don't check topics so we match every time
+        if self.getType() != Policy.TYPE_TOPIC and other_policy.getType() != Policy.TYPE_TOPIC:
+            logger.debug("Both policies are not of topic type -> True")
+            return True
+
+        # if one of the two policies is a TOPIC policy and not the other we can't compare so we don't match
+        else:
+            logger.debug("Policy types differents -> False")
+            return False
 
     def checkRestriction(self, transformation_item) -> bool:
         """Return true if the policy match a restriction"""

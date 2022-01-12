@@ -34,3 +34,13 @@ Run `docker start adc-postgres`
 Edit `/backend/models.py`.
 Run `python manage.py makemigrations` to generate a new migration.
 Run `python manage.py migrate` to apply migrations.
+
+## Create certificates for TLS connections
+Run `cd certificates`
+Run `./createCertificates.sh`
+
+## Build and run Artemis broker
+Run `cd artemis_broker`
+Run `./manage_artemis.sh build`
+Run `./manage_artemis.sh start`
+

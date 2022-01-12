@@ -2,15 +2,14 @@ import logging
 from django.contrib.auth.models import User
 from unidecode import unidecode
 from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT
-from adc_backend.settings import BROKER_AMQP_URL
 from backend.Policy import *
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
-import backend.DataBrokerProxy as DataBrokerProxy
+from backend.DataBrokerProxy import *
 
 logger = logging.getLogger('adc')
 _static_routes = {}
 
-def addPolicy(user_data, request_data):
+def addPolicy(user_data, request_data) -> int:
     """Add or update a subscriber policy in the database"""
     policy_id = request_data['policy_id']
     transformations = request_data['transformations']
@@ -36,9 +35,9 @@ def addPolicy(user_data, request_data):
         organization_id = USER_INFO.objects.get(user_id=user_data.id).user_organization_id
 
         # Save the delivery end point
-        queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user_data.first_name, user_data.last_name)
+        queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user_data.username)
         queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
-        end_point = f"{BROKER_AMQP_URL}{queue_name}"
+        end_point = f"{queue_name}"
         subscriber_policy = SUBSCRIBER_POLICY.objects.filter(id=policy_id).update(delivery_end_point=unidecode(end_point.lower()))
 
         logger.info(f"Creating subscriber policy {policy_id}")
@@ -57,6 +56,8 @@ def addPolicy(user_data, request_data):
 
     SubscriberPolicyManager.updateStaticRouting()
 
+    return policy_id
+
 def deletePolicy(user_data, request_data) -> None:
     """Delete a subscriber policy from the database"""
     # Match policy with user
@@ -69,7 +70,7 @@ def deletePolicy(user_data, request_data) -> None:
     adc_user = ADCUser(user_data)
 
     # delete the corresponding queue in the broker
-    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.first_name, user_data.last_name)
+    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.username)
     queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
     DataBrokerProxy.deleteQueue(queue_name)
 
@@ -105,6 +106,18 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
 
     to_remove = []
 
+    logger.debug("Search endpoints that doesn't match the publisher_policy topic")
+    # find all the endpoints that doesn't match the publisher_policy topic
+    for endpoint in endpoints:
+        if not publisher_policy.checkTopicMatch(endpoint.subscriber_policy):
+            to_remove.append(endpoint)
+
+    # we remove them is a second time to avoid the modification of the list during the iteration
+    for endpoint in to_remove:
+        endpoints.remove(endpoint)
+
+    to_remove.clear()
+    
     # find all the endpoints that doesn't match the publisher_policy restrictions
     logger.debug("Search endpoints that doesn't match the publisher_policy restrictions")
     for transformation in publisher_policy.transformations:
@@ -117,7 +130,7 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
     for endpoint in to_remove:
         endpoints.remove(endpoint)
 
-    to_remove = []
+    to_remove.clear()
 
     # find all the endpoints who have an uncompatible restriction with the publisher_policy
     logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
@@ -167,3 +180,5 @@ def updateStaticRouting():
 
         findStaticRouting(policy, subscriber_policies)
 
+def retrieveStaticRouting(publisher_policy_id):
+    return _static_routes.get(publisher_policy_id)
