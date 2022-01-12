@@ -1,6 +1,7 @@
 import logging
 from django.db import connection
 from django.http import HttpResponse, JsonResponse
+from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -9,11 +10,11 @@ from django.shortcuts import render
 # from django.views.generic import TemplateView
 from .models import USER_INFO, ORGANIZATIONS, DATA_CATALOGUE_ELEMENT, PUBLISHER_POLICY, SUBSCRIBER_POLICY, TRANSFORMATION_ITEM
 from django.contrib.auth.models import User
-from adc_backend.settings import BROKER_AMQP_URL
 from unidecode import unidecode
 
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
+from backend.DataBrokerProxy import *
 from backend.views_user import getUser
 from backend.Policy import *
 
@@ -100,9 +101,7 @@ def postPublisherPolicy(request):
         # try if user not exist by email
         try:
             user_data = User.objects.get(email=request.data['user_email'])
-
-            policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
-            SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+            PublisherPolicyManager.addPolicy(user_data, request.data)
             response = {'message':'Publisher policy saved'}
             
         except User.DoesNotExist:
@@ -155,7 +154,6 @@ def deletePublisherPolicy(request):
             user = User.objects.get(email=request.data['user_email'])
             try:
                 PublisherPolicyManager.deletePolicy(user, request.data)
-                SubscriberPolicyManager.removeStaticRoute(request.data['policy_id'])
 
                 return JsonResponse({'message':'The publisher policy is deleted'})
 
@@ -275,3 +273,34 @@ def deleteSubscriberPolicy(request):
         
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
+
+@api_view(['POST'])
+@ensure_csrf_cookie
+def publishMessage(request):
+    if request.method == "POST":
+        logger.info("Publish message")
+        
+        try:
+            # TODO We need to update the static routes at the start of the application
+            # TODO check if the user who sent this request have access to the policy
+            SubscriberPolicyManager.updateStaticRouting()
+
+            # TODO get this parameters from the request
+            policy_id = 1
+            message_body = "coucou"
+            endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
+
+            if endpoints != None:
+                for endpoint in endpoints:
+                    DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+            else:
+                logger.info(f"No endpoint found for policy {policy_id}.")
+                return JsonResponse({'message':'no endpoint found'})
+        except any:
+            # TODO handle exceptions and returns better.
+            logger.error("woops")
+            return JsonResponse({'message':'unknown error occured'})
+
+        return JsonResponse({'message':'published'})
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
