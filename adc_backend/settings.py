@@ -139,8 +139,18 @@ STATICFILES_DIRS = (
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-BROKER_AMQP_URL = 'amqps://adcbroker:5771/'
+# broker settings
+
+BROKER_AMQPS_URL = 'amqps://admin:admin@localhost:5771/'
 BROKER_MANAGER_SCRIPT = os.path.join(BASE_DIR, 'artemis_broker', 'manage_artemis.sh')
+
+# amqps client settings
+
+AMQPS_CERTIFICATES_DIR = os.path.join(BASE_DIR, 'certificates', 'certs')
+AMQPS_TRUSTED_CA = os.path.join(AMQPS_CERTIFICATES_DIR, "broker_cert.pem")
+AMQPS_CLIENT_CERTIFICATE = os.path.join(AMQPS_CERTIFICATES_DIR, "client_cert.pem")
+AMQPS_CLIENT_PRIVATE_KEY = os.path.join(AMQPS_CERTIFICATES_DIR, "client_private_key.pem")
+AMQPS_CLIENT_PASSWORD = "secret"
 
 # Redirect to home URL after login and logout (Default redirects to /accounts/profile/)
 REDIRECT_URL = '/'
