@@ -14,6 +14,7 @@ from unidecode import unidecode
 
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
+import backend.CatalogueManager as CatalogueManager
 from backend.DataBrokerProxy import *
 from backend.views_user import getUser
 from backend.Policy import *
@@ -46,14 +47,10 @@ def postDataCatalogue(request):
         try:
             # Check if data element already exist
             data_element = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['id'])
-            # Update data element if exist
-            data_element.__dict__.update(data_type=request.data['type'], data_path=request.data['path'], data_schema=request.data['schema'])
-            data_element.save()
+            CatalogueManager.updateCatalogueElement(request.data)
             return JsonResponse({'message':'Data updated'})
         except DATA_CATALOGUE_ELEMENT.DoesNotExist:
-            # create new data catalogue element
-            new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request.data['type'], data_path=request.data['path'], data_schema=request.data['schema'])
-            new_data_element.save()
+            CatalogueManager.addCatalogueElement(request.data)
             return JsonResponse({'message':'Data saved'})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
@@ -69,7 +66,7 @@ def getDataCatalogue(request):
             data_catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(data_type__contains=policy_type.split('_')[0]).values()
         else:
             # Get all data catalogue elements from database
-            data_catalogue = DATA_CATALOGUE_ELEMENT.objects.values()
+            data_catalogue = CatalogueManager.getCatalogueElementList()
         return JsonResponse({'data':list(data_catalogue)})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
@@ -99,10 +96,19 @@ def postPublisherPolicy(request):
     """View function for create or update data catalogue element"""
     if request.method == "POST":
         # try if user not exist by email
+        
         try:
             user_data = User.objects.get(email=request.data['user_email'])
-            PublisherPolicyManager.addPolicy(user_data, request.data)
-            response = {'message':'Publisher policy saved'}
+            try:
+                publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'])
+                policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
+                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                response = {'message':'Publisher policy created'}
+
+            except PUBLISHER_POLICY.DoesNotExist:
+                policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
+                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                response = {'message':'Publisher policy updated'}
             
         except User.DoesNotExist:
             response = {'message':'User does not exist'}

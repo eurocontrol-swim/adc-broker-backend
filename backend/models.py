@@ -103,7 +103,7 @@ class TRANSFORMATION_ITEM(models.Model):
     )
     organization_type = models.CharField(_('type'), choices=TYPES, max_length=255, null=True)
 
-    json_path = models.CharField(max_length=500)
+    json_path = models.CharField(max_length=500, null=True)
 
     orga_type = 'Organization type'
     orga_name = 'Organization name'
@@ -115,13 +115,15 @@ class TRANSFORMATION_ITEM(models.Model):
     )
     item_type = models.CharField(_('item_type'), null=False, choices=ITEM_TYPES, max_length=255)
 
-    endpoint_restriction = 'Endpoint restriction'
+    organization_name_endpoint_restriction = 'Organization name endpoint restriction'
+    organization_type_endpoint_restriction = 'Organization type endpoint restriction'
     payload_extraction = 'Payload extraction'
     ITEM_OPERATORS = (
-        (endpoint_restriction, _('endpoint_restriction')),
+        (organization_name_endpoint_restriction, _('organization_name_endpoint_restriction')),
+        (organization_type_endpoint_restriction, _('organization_type_endpoint_restriction')),
         (payload_extraction, _('payload_extraction')),
     )
-    item_operator = models.CharField(_('item_operator'), null=False, choices=ITEM_OPERATORS, max_length=255)
+    item_operator = models.CharField(_('item_operator'), null=True, choices=ITEM_OPERATORS, max_length=255)
     item_order = models.IntegerField(null=True)
 
     class Meta:

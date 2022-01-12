@@ -21,7 +21,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 
-import backend.DataBrokerProxy as DataBrokerProxy
+import backend.UserManager as UserManager
 
 logger = logging.getLogger('adc')
 
@@ -68,64 +68,20 @@ def getUser(id):
 def postUser(request):
     """View function for create or update user"""
     if request.method == "POST":
-        try:
-            organization = ORGANIZATIONS.objects.get(name=request.data['organization_name'])
-            if request.data['organization_type'] == organization.type:
-                # If same organization type, get organization id
-                organization_id = organization.id
-            else:
-                # create new organization
-                new_organization = ORGANIZATIONS.objects.create(name=request.data['organization_name'], type=request.data['organization_type'])
-                new_organization.save()
-                # get organization id
-                organization_id = new_organization.id
-        except ORGANIZATIONS.DoesNotExist:
-            # create new organization
-            new_organization = ORGANIZATIONS.objects.create(name=request.data['organization_name'], type=request.data['organization_type'])
-            new_organization.save()
-            # get organization id
-            organization_id = new_organization.id
-
-        user_email = request.data['email']
         # try if user exist by email
         try:
             user = User.objects.get(id=request.data['id'])
             # Check if another user already has this username
-            already_username = User.objects.filter(username=user_email).exclude(id=request.data['id'])
+            already_username = User.objects.filter(username=request.data['email']).exclude(id=request.data['id'])
             if already_username:
                 return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Another user already has this username')
             else:
-                # Update User if exist on auth_user table
-                user.__dict__.update(username=user_email, first_name=request.data['firstname'], last_name=request.data['lastname'], email=user_email)
-                # Update user password
-                if request.data['password'] is not None:
-                    user.set_password(request.data['password'])
-                user.save()
-                user_info = USER_INFO.objects.get(user_id=user.id)
-                user_info.__dict__.update(user_role=request.data['role'], user_organization_id=organization_id)
-                user_info.save()
+                UserManager.updateUser(request.data)
                 response = {'message':'User updated'}
 
         except User.DoesNotExist:
-            # User does not exist on auth_user table
-            # Create new user
-            new_user = User.objects.create(username=user_email, first_name=request.data['firstname'], last_name=request.data['lastname'], email=user_email)
-            # Create password
-            if request.data['password'] is not None:
-                new_user.set_password(request.data['password'])
-            new_user.save()
-
-            #save new user info
-            new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request.data['role'], user_organization_id=organization_id)
-            new_user_info.save()
+            UserManager.addUser(request.data)
             response = {'message':'User created'}
-        
-            if new_user_info.user_role == 'subscriber':
-                # create user in the broker
-                queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.first_name, new_user.last_name)
-                broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.first_name, new_user.last_name)
-                # TODO handle password
-                DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)
 
         return JsonResponse(response)
     else:
@@ -135,23 +91,8 @@ def postUser(request):
 @ensure_csrf_cookie
 def getUsers(request):
     """View function to get all users informations"""
-    user_list = []
     if request.method == "GET":
-        # Get all users from database
-        all_users = User.objects.values('id','first_name','last_name','email')
-        for user in all_users:
-            # Get user informations
-            info = USER_INFO.objects.filter(user_id=user['id']).values('user_role','user_organization_id')[0]
-            # Get user organization
-            organization = ORGANIZATIONS.objects.filter(id=info['user_organization_id']).values('name', 'type')[0]
-            # Rename keys
-            organization['organization_name'] = organization.pop('name')
-            organization['organization_type'] = organization.pop('type')
-            # Clean dictionary without id
-            info.pop('user_organization_id', None)
-            # user.pop('id', None)
-            # Create a list with dictionaries
-            user_list.append(dict(**user, **info, **organization))
+        user_list = UserManager.getuserList()
         return JsonResponse({'users':user_list})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
@@ -166,13 +107,7 @@ def deleteUser(request):
         #     user = User.objects.get(email=request.data['user_email'], role='administration')
         try:
             user = User.objects.get(email=request.data['user_email'])
-
-            if USER_INFO.objects.get(user_id=user.id).user_role == 'subscriber':
-                # delete user in the broker
-                broker_user_name = DataBrokerProxy.generateBrokerUsername(user.first_name, user.last_name)
-                DataBrokerProxy.deleteUser(broker_user_name)
-
-            user.delete()
+            UserManager.deleteUser(user)
 
             return JsonResponse({'message':'The user is deleted'})
 
