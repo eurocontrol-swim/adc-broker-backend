@@ -182,3 +182,13 @@ def updateStaticRouting():
 
 def retrieveStaticRouting(publisher_policy_id):
     return _static_routes.get(publisher_policy_id)
+
+def getPolicyByUser(user_id):
+    """Get subscriber policy by User id"""
+    policy = SUBSCRIBER_POLICY.objects.get(user_id=user_id)
+    return policy
+
+def getPolicyById(policy_id):
+    """Get subscriber policy by id"""
+    policy = SUBSCRIBER_POLICY.objects.get(id=policy_id)
+    return policy

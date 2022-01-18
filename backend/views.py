@@ -4,7 +4,9 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 # from rest_framework.schemas import AutoSchema
 from django.shortcuts import render
 # from django.views.generic import TemplateView
@@ -281,20 +283,30 @@ def deleteSubscriberPolicy(request):
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
 
 @api_view(['POST'])
-@ensure_csrf_cookie
+# @ensure_csrf_cookie
+# User authentication required
+# If the user is not authenticated, return error 401
+@permission_classes([IsAuthenticated])
 def publishMessage(request):
     if request.method == "POST":
         logger.info("Publish message")
         
         try:
             # TODO We need to update the static routes at the start of the application
-            # TODO check if the user who sent this request have access to the policy
             SubscriberPolicyManager.updateStaticRouting()
-
-            # TODO get this parameters from the request
-            policy_id = 1
-            message_body = "coucou"
-            endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
+            
+            # TODO check if the user who sent this request have access to the policy
+            user_id = request.data['user_id']
+            policy_id = int(request.data['policy_id'])
+            user_policies = PublisherPolicyManager.getPolicyByUser(user_id)
+            for policy in user_policies:
+                logger.info(policy['id'])
+                logger.info(policy_id)
+                if policy['id'] == policy_id:
+                    message_body = "coucou"
+                    endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
+                else:
+                    return JsonResponse({'message':'no endpoint found'})
 
             if endpoints != None:
                 for endpoint in endpoints:
@@ -310,3 +322,18 @@ def publishMessage(request):
         return JsonResponse({'message':'published'})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
+
+class TestView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        content = {'message': 'This is a test from GET!'}
+        return Response(content)
+
+@api_view(['POST'])
+# If the user is not authenticated, return error 401
+@permission_classes([IsAuthenticated])
+def Test(request):
+    content = {'message': 'This is a test from POST!'}
+    logger.info(request.user.id)
+    return Response(content)

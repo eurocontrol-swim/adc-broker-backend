@@ -3,17 +3,20 @@ from backend.Policy import *
 from django.contrib.auth.models import User
 from .models import USER_INFO, ORGANIZATIONS
 import backend.DataBrokerProxy as DataBrokerProxy
+from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger('adc')
 
 def addUser(request_data):
     """Add user in the database"""
     try:
-        organization = ORGANIZATIONS.objects.get(name=request_data['organization_name'])
-        if request_data['organization_type'] == organization.type:
-            # If same organization type, get organization id
-            organization_id = organization.id
-        else:
+        organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
+        organization_id = None
+        for organization in organizations:
+            if request_data['organization_type'] == organization.type:
+                # If same organization type, get organization id
+                organization_id = organization.id
+        if organization_id is None:
             # create new organization
             new_organization = ORGANIZATIONS.objects.create(name=request_data['organization_name'], type=request_data['organization_type'])
             new_organization.save()
@@ -41,6 +44,10 @@ def addUser(request_data):
             new_user.set_password(request_data['password'])
         new_user.save()
 
+        # Generate API auth token for user
+        user_token = Token.objects.create(user=new_user)
+        user_token.save()
+
         #save new user info
         new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request_data['role'], user_organization_id=organization_id)
         new_user_info.save()
@@ -57,11 +64,13 @@ def addUser(request_data):
 def updateUser(request_data):
     """Update a user in the database"""
     try:
-        organization = ORGANIZATIONS.objects.get(name=request_data['organization_name'])
-        if request_data['organization_type'] == organization.type:
-            # If same organization type, get organization id
-            organization_id = organization.id
-        else:
+        organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
+        organization_id = None
+        for organization in organizations:
+            if request_data['organization_type'] == organization.type:
+                # If same organization type, get organization id
+                organization_id = organization.id
+        if organization_id is None:
             # create new organization
             new_organization = ORGANIZATIONS.objects.create(name=request_data['organization_name'], type=request_data['organization_type'])
             new_organization.save()

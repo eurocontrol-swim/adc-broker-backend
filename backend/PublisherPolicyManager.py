@@ -59,3 +59,18 @@ def deletePolicy(user_data, request_data):
     SubscriberPolicyManager.removeStaticRoute(policy_id)
 
     logger.info("Deleting publisher policy %s" % policy_id)
+
+def getPolicyByUser(user_id):
+    """Get publisher policies id by User id"""
+    policies = PUBLISHER_POLICY.objects.filter(user_id=user_id).values('id')
+    return policies
+
+def getPolicyById(policy_id):
+    """Get publisher policy by id"""
+    policy = PUBLISHER_POLICY.objects.get(id=policy_id)
+    return policy
+
+def getAllPolicy():
+    """Get all publisher policy"""
+    policies = PUBLISHER_POLICY.objects.all()
+    return policies
