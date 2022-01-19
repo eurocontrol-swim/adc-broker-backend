@@ -68,18 +68,22 @@ def getUser(id):
 def postUser(request):
     """View function for create or update user"""
     if request.method == "POST":
-        # try if user exist by email
-        try:
-            user = User.objects.get(id=request.data['id'])
-            # Check if another user already has this username
-            already_username = User.objects.filter(username=request.data['email']).exclude(id=request.data['id'])
-            if already_username:
-                return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Another user already has this username')
-            else:
-                UserManager.updateUser(request.data)
-                response = {'message':'User updated'}
+        if request.data['id'] is not None:
+            # try if user exist by email
+            try:
+                user = User.objects.get(id=request.data['id'])
+                # Check if another user already has this username
+                already_username = User.objects.filter(username=request.data['email']).exclude(id=request.data['id'])
+                if already_username:
+                    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Another user already has this username')
+                else:
+                    UserManager.updateUser(request.data)
+                    response = {'message':'User updated'}
 
-        except User.DoesNotExist:
+            except User.DoesNotExist:
+                UserManager.addUser(request.data)
+                response = {'message':'User created'}
+        else:
             UserManager.addUser(request.data)
             response = {'message':'User created'}
 
