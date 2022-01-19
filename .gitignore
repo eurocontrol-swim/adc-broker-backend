@@ -3,5 +3,10 @@
 # /static symlinc output
 /static
 
+# certificates
+/certificates/certs/*
+/artemis_broker/certs/*
+
 # extensions
 *.pyc
+*.log
