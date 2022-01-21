@@ -62,5 +62,5 @@ COPY artemis_broker /app/artemis_broker
 
 # Run the server
 WORKDIR /app
-#ENTRYPOINT ["python3", "manage.py", "runserver"]
+ENTRYPOINT ["entrypoint.sh"]
 
