@@ -53,14 +53,8 @@ RUN apk add curl
 COPY adc_backend /app/adc_backend
 COPY backend /app/backend
 COPY manage.py /app/
+COPY entrypoint.sh /app/
 COPY artemis_broker /app/artemis_broker
 
-# Database migration
-#WORKDIR /app
-#RUN python3 manage.py makemigrations
-#RUN python3 manage.py migrate
-
-# Run the server
-WORKDIR /app
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
