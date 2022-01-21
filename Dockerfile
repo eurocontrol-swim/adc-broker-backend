@@ -57,5 +57,5 @@ COPY entrypoint.sh /app/
 COPY artemis_broker /app/artemis_broker
 
 WORKDIR /app
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 
