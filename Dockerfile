@@ -56,5 +56,6 @@ COPY manage.py /app/
 COPY entrypoint.sh /app/
 COPY artemis_broker /app/artemis_broker
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+WORKDIR /app
+ENTRYPOINT ["entrypoint.sh"]
 
