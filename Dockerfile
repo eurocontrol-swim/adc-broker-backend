@@ -45,6 +45,7 @@ RUN pip3 install django-rest-swagger
 RUN apk add postgresql-dev
 RUN pip3 install psycopg2-binary
 RUN pip3 install unidecode
+RUN pip3 install gunicorn
 
 # other dependencies
 RUN apk add curl
