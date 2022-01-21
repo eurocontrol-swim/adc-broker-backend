@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -135,19 +135,19 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join('/', 'shared', 'dist', 'out'),
 )
 
 # STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # broker settings
 
-BROKER_AMQPS_URL = 'amqps://admin:admin@localhost:5771/'
+BROKER_AMQPS_URL = 'amqps://admin:admin@broker:5771/'
 BROKER_MANAGER_SCRIPT = os.path.join(BASE_DIR, 'artemis_broker', 'manage_artemis.sh')
 
 # amqps client settings
 
-AMQPS_CERTIFICATES_DIR = os.path.join(BASE_DIR, 'certificates', 'certs')
+AMQPS_CERTIFICATES_DIR = os.path.join(os.sep, 'certs')
 AMQPS_TRUSTED_CA = os.path.join(AMQPS_CERTIFICATES_DIR, "broker_cert.pem")
 AMQPS_CLIENT_CERTIFICATE = os.path.join(AMQPS_CERTIFICATES_DIR, "client_cert.pem")
 AMQPS_CLIENT_PRIVATE_KEY = os.path.join(AMQPS_CERTIFICATES_DIR, "client_private_key.pem")
