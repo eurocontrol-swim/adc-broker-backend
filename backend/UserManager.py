@@ -2,7 +2,7 @@ import logging
 from backend.Policy import *
 from django.contrib.auth.models import User
 from .models import USER_INFO, ORGANIZATIONS
-import backend.DataBrokerProxy as DataBrokerProxy
+from backend.DataBrokerProxy import *
 from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger('adc')
@@ -55,7 +55,7 @@ def addUser(request_data):
     
         if new_user_info.user_role == 'subscriber':
             # create user in the broker
-            queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.first_name, new_user.last_name)
+            queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.username)
             broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.first_name, new_user.last_name)
             # TODO handle password
             DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)

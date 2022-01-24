@@ -61,6 +61,10 @@ class DataBrokerProxy:
         # TODO get a result to know if the message is succesfully sent or not
 
     @staticmethod
+    def _manage_broker(command) -> int:
+        return os.system(f"{settings.BROKER_MANAGER_SCRIPT} {settings.BROKER_MANAGER_URL} " + command)
+
+    @staticmethod
     def createUser(user_name, password, queue_prefix):
         """
         Create a user in the broker
@@ -71,7 +75,7 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Creating user {user_name} in the broker...")
-        result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} add-user {user_name} {password} {queue_prefix}")
+        result_code = DataBrokerProxy._manage_broker(f"add-user {user_name} {password} {queue_prefix}")
 
         if result_code != 0:
             logger.error("Failed to create user {user_name}")
@@ -84,7 +88,7 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Deleting user {user_name} in the broker...")
-        result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} remove-user {user_name}")
+        result_code = DataBrokerProxy._manage_broker(f"remove-user {user_name}")
 
         if result_code != 0:
             logger.error(f"Failed to delete user {user_name}")
@@ -97,7 +101,7 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Creating queue {name}...")
-        result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} create-queue {name}")
+        result_code = DataBrokerProxy._manage_broker(f"create-queue {name}")
 
         if result_code != 0:
             logger.error("Failed to create queue {name}")
@@ -113,7 +117,7 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Deleting queue {name}...")
-        result_code = os.system(f"{settings.BROKER_MANAGER_SCRIPT} delete-queue {name}")
+        result_code = DataBrokerProxy._manage_broker(f"delete-queue {name}")
 
         if result_code != 0:
             logger.error(f"Failed to delete queue {name}")

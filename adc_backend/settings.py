@@ -145,6 +145,7 @@ STATICFILES_DIRS = (
 BROKER_HOST = os.environ.get("AMQP_BROKER_HOST", "localhost")
 BROKER_ADMIN_USER = os.environ.get("AMQP_BROKER_ADMIN", "admin")
 BROKER_ADMIN_PASSWORD = os.environ.get("AMQP_BROKER_ADMIN_PASSWORD", "admin")
+BROKER_MANAGER_URL = 'http://' + BROKER_ADMIN_USER + ':' + BROKER_ADMIN_PASSWORD + '@' + BROKER_HOST + ':8161'
 BROKER_AMQPS_URL = 'amqps://' + BROKER_ADMIN_USER + ':' + BROKER_ADMIN_PASSWORD + '@' + BROKER_HOST + ':5771/'
 BROKER_MANAGER_SCRIPT = os.path.join(BASE_DIR, 'artemis_broker', 'manage_artemis.sh')
 

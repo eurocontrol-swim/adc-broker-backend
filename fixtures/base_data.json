@@ -1,0 +1,37 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+          "password": "pbkdf2_sha256$320000$eFDB1tHZUUdssX7DxcAswr$diCi7+6OLLH+Kpb3NpkVxD2mN+oPMX9BZIF9SRWwQh8=",
+          "last_login": null,
+          "is_superuser": true,
+          "username": "admin@mail.com",
+          "first_name": "",
+          "last_name": "",
+          "email": "admin@mail.com",
+          "is_staff": true,
+          "is_active": true,
+          "date_joined": "2022-01-24T15:51:55.324Z",
+          "groups": [],
+          "user_permissions": []
+        }
+    },      
+    {
+      "model": "backend.user_info",
+      "pk": 1,
+      "fields": {
+        "user": 1,
+        "user_organization": 1,
+        "user_role": "administrator"
+      }
+    },
+    {   
+      "model": "backend.organizations",
+      "pk": 1,
+      "fields": { 
+        "name": "",
+        "type": ""
+      }
+    } 
+]

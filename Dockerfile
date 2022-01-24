@@ -56,6 +56,7 @@ COPY backend /app/backend
 COPY manage.py /app/
 COPY entrypoint.sh /app/
 COPY artemis_broker /app/artemis_broker
+COPY fixtures /app/fixtures
 
 WORKDIR /app
 ENTRYPOINT ["/app/entrypoint.sh"]
