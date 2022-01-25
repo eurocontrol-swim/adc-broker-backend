@@ -6,18 +6,15 @@ from backend.Policy import *
 logger = logging.getLogger('adc')
 
 def addPolicy(user_data, request_data) -> int:
-    """Add or update a publisher policy in the database"""
+    """Add a publisher policy in the database"""
 
-    policy_id = request_data['policy_id']
     transformations = request_data['transformations']
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
 
-    publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id)
-    publisher_policy.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
-    transformation_item = TRANSFORMATION_ITEM.objects.filter(publisher_policy_id = policy_id)
-    transformation_item.delete()
+    publisher_policy = PUBLISHER_POLICY.objects.create(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    publisher_policy.save()
 
-    logger.info("Updating publisher policy %s" % policy_id)
+    policy_id = publisher_policy.id
 
     for index, item in enumerate(transformations):
         # create new transformation items
