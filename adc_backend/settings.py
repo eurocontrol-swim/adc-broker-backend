@@ -151,7 +151,7 @@ BROKER_MANAGER_SCRIPT = os.path.join(BASE_DIR, 'artemis_broker', 'manage_artemis
 
 # amqps client settings
 
-AMQPS_CERTIFICATES_DIR = os.path.join(os.sep, 'certs')
+AMQPS_CERTIFICATES_DIR = os.environ.get("AMQPS_CERTIFICATES_DIR", os.path.join(BASE_DIR, "certificates", "certs"))
 AMQPS_TRUSTED_CA = os.path.join(AMQPS_CERTIFICATES_DIR, "broker_cert.pem")
 AMQPS_CLIENT_CERTIFICATE = os.path.join(AMQPS_CERTIFICATES_DIR, "client_cert.pem")
 AMQPS_CLIENT_PRIVATE_KEY = os.path.join(AMQPS_CERTIFICATES_DIR, "client_private_key.pem")

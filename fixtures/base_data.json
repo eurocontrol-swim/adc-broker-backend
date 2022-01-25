@@ -16,7 +16,7 @@
           "groups": [],
           "user_permissions": []
         }
-    },      
+    },
     {
       "model": "backend.user_info",
       "pk": 1,
@@ -26,12 +26,12 @@
         "user_role": "administrator"
       }
     },
-    {   
+    {
       "model": "backend.organizations",
       "pk": 1,
       "fields": { 
         "name": "",
         "type": ""
       }
-    } 
+    }
 ]
