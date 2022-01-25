@@ -43,6 +43,6 @@ Run `./createCertificates.sh`
 
 ## Build and run Artemis broker
 Run `cd artemis_broker`
-Run `./manage_artemis.sh build`
-Run `./manage_artemis.sh start`
+Run `docker build -t artemis_broker .`
+Run `docker run -e AMQ_USER=admin -e AMQ_PASSWORD=admin -p5771:5771 -v '<absolute path to adc-broker-backend>/certificates/certs:/certs' --name artemis_broker artemis_broker`
 

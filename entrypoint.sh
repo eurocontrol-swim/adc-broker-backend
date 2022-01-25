@@ -14,6 +14,7 @@ python3 manage.py migrate
 
 echo "Creating admin user..."
 
+# TODO Check if the user admin@mail.com already exists. If it does don't erase it 
 # create user admin
 python3 manage.py loaddata fixtures/base_data.json
 
