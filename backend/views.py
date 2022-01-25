@@ -217,10 +217,15 @@ def postSubscriberPolicy(request):
         try:
             user_data = User.objects.get(email=request.data['user_email'])
 
-            SubscriberPolicyManager.addPolicy(user_data, request.data)
+            try:
+                publisher_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
+                policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
+                response = {'message':'Subscriber policy created'}
 
-            response = {'message':'Subscriber policy saved'}
-
+            except SUBSCRIBER_POLICY.DoesNotExist:
+                policy_id = SubscriberPolicyManager.addPolicy(user_data, request.data)
+                response = {'message':'Subscriber policy updated'}
+            
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
 
@@ -295,31 +300,37 @@ def publishMessage(request):
             # TODO We need to update the static routes at the start of the application
             SubscriberPolicyManager.updateStaticRouting()
             
-            # TODO check if the user who sent this request have access to the policy
-            user_id = request.data['user_id']
+            # Check if the user who sent this request have access to the policy
+            user_id = request.user.id
             policy_id = int(request.data['policy_id'])
             user_policies = PublisherPolicyManager.getPolicyByUser(user_id)
-            for policy in user_policies:
-                logger.info(policy['id'])
-                logger.info(policy_id)
-                if policy['id'] == policy_id:
-                    message_body = "coucou"
-                    endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
-                else:
-                    return JsonResponse({'message':'no endpoint found'})
 
-            if endpoints != None:
-                for endpoint in endpoints:
-                    DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+            if len(user_policies) > 0:
+                for policy in user_policies:
+                    if policy['id'] == policy_id:
+                        message_body = request.data['message']
+                        # Static routing
+                        endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
+
+                        # Dynamic routing
+                        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), message_body, endpoints)
+
+                        if endpoints and endpoints != None:
+                            for endpoint in endpoints:
+                                DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+                        else:
+                            logger.info(f"No endpoint found for policy {policy_id}.")
+                            return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
+
             else:
-                logger.info(f"No endpoint found for policy {policy_id}.")
-                return JsonResponse({'message':'no endpoint found'})
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
+            
         except any:
             # TODO handle exceptions and returns better.
             logger.error("woops")
             return JsonResponse({'message':'unknown error occured'})
 
-        return JsonResponse({'message':'published'})
+        return JsonResponse({'message':'Your message is published'})
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 

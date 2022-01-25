@@ -2,6 +2,11 @@ import logging
 from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, USER_INFO, ORGANIZATIONS
 from django.contrib.auth.models import User
 
+# JSON PATH
+from jsonpath_ng import jsonpath
+from jsonpath_ng.ext import parse
+import json
+
 logger = logging.getLogger('adc')
 
 class ADCUser:
@@ -57,6 +62,7 @@ class TransformationItem:
           transformation_data : data from table TRANSFORMATION_ITEM
         """
         self.data = transformation_data
+        self.__payload_data = ''
 
     def isStatic(self) -> bool:
         """Return true if the transformation can be applied staticaly"""
@@ -74,15 +80,45 @@ class TransformationItem:
             logger.debug(f"organization_name : {self.data.organization_name}, {policy.user.getOrganizationName()}")
             return self.data.organization_name == policy.user.getOrganizationName()
         elif self.data.item_type == "data_based":
-            logger.warn(f"Unhandled case : {self.data.item_type}")
+            if self.data.item_operator == "payload_extraction":
+                logger.warn(f"Unhandled case : {self.data.item_type}")
+            elif self.data.item_operator == "organization_name_endpoint_restriction":
+                logger.debug(f"organization_name_endpoint_restriction : {self.__payload_data}, {policy.user.getOrganizationName()}")
+                return policy.user.getOrganizationName() == self.__payload_data
+            elif self.data.item_operator == "organization_type_endpoint_restriction":
+                logger.debug(f"organization_type_endpoint_restriction : {self.__payload_data}, {policy.user.getOrganizationType()}")
+                return policy.user.getOrganizationType() == self.__payload_data
+            else:
+                logger.warn(f"Unhandled case : {self.data.item_type}")
         else:
             logger.warn(f"Unhandled case : {self.data.item_type}")
 
         return False
 
-    def doesItMatchValue(routing_object):
-        # TODO
-        pass
+    def processPayload(self, payload):
+        """"""
+        logger.info('processPayload')
+        if self.data.json_path is not None:
+            # TODO - Extract string from payload with JsonPath
+            json_path = self.data.json_path
+            try:
+                json_data = json.loads(payload)
+                jsonpath_expr = parse(json_path)
+                matches = jsonpath_expr.find(json_data)
+
+                if(len(matches) > 0):
+                    for match in matches:
+                        logger.info("Extracted: " + str(match.value))
+                        self.__payload_data = match.value
+                else:
+                    logger.info("No match found")
+                    self.__payload_data = ''
+            except ValueError as e:
+                logger.info("Error with Json_path")
+                self.__payload_data = ''
+        else:
+            logger.info("No Json_path")
+            self.__payload_data = ''
 
 class Policy:
     """Data structure base type string"""
@@ -142,6 +178,11 @@ class Policy:
     def checkRestriction(self, transformation_item) -> bool:
         """Return true if the policy match a restriction"""
         return transformation_item.checkRestriction(self)
+    
+    def processPayload(self, payload):
+        """Process the payload for all policy transformations"""
+        for transformation in self.transformations:
+            transformation.processPayload(payload)
 
 class PublisherPolicy(Policy):
     """Publisher policy"""
