@@ -2,18 +2,17 @@ import os
 from django.test import TestCase, override_settings
 from django.conf import settings
 from backend.models import *
+from backend.Policy import *
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
 
 # use the stubbed manage_artemis to avoid modifying the broker conf
 @override_settings(BROKER_MANAGER_SCRIPT=os.path.join(settings.BASE_DIR, 'backend', 'tests', 'manage_artemis_stub.sh'))
-class StaticRouteTestCase(TestCase):
-    """Test the static route and the policies management"""
+class BackendTestCase(TestCase):
+    """General backend testing"""
 
     def setUp(self):
-        """Populate the database with users, organizations and catalogue elements"""
-
-        # Create Users
+        """Populate the database with users, organizations, catalogue elements and policies"""
 
         # organization Airport oprator
         new_organization = ORGANIZATIONS.objects.create(name='orga1', type='Airport operator')
@@ -25,36 +24,38 @@ class StaticRouteTestCase(TestCase):
         new_organization.save()
         organization_id2 = new_organization.id
 
-        # publisher 1
-        new_user = User.objects.create(username="publisher.1@mail.com", first_name="publisher", last_name="1", email="publisher.1@mail.com")
-        new_user.set_password("password")
-        new_user.save()
+        # Create Users
 
-        new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role="publisher", user_organization_id=organization_id1)
+        # publisher 1
+        new_first_publisher = User.objects.create(username="publisher.1@mail.com", first_name="publisher", last_name="1", email="publisher.1@mail.com")
+        new_first_publisher.set_password("password")
+        new_first_publisher.save()
+
+        new_user_info = USER_INFO.objects.create(user_id = new_first_publisher.id, user_role="publisher", user_organization_id=organization_id1)
         new_user_info.save()
 
         # publisher 2
-        new_user = User.objects.create(username="publisher.2@mail.com", first_name="publisher", last_name="2", email="publisher.2@mail.com")
-        new_user.set_password("password")
-        new_user.save()
+        new_publisher = User.objects.create(username="publisher.2@mail.com", first_name="publisher", last_name="2", email="publisher.2@mail.com")
+        new_publisher.set_password("password")
+        new_publisher.save()
 
-        new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role="publisher", user_organization_id=organization_id2)
+        new_user_info = USER_INFO.objects.create(user_id = new_publisher.id, user_role="publisher", user_organization_id=organization_id2)
         new_user_info.save()
 
         # subscriber 1
-        new_user = User.objects.create(username="subscriber.1@mail.com", first_name="subscriber", last_name="1", email="subscriber.1@mail.com")
-        new_user.set_password("password")
-        new_user.save()
+        new_first_subscriber = User.objects.create(username="subscriber.1@mail.com", first_name="subscriber", last_name="1", email="subscriber.1@mail.com")
+        new_first_subscriber.set_password("password")
+        new_first_subscriber.save()
 
-        new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role="subscriber", user_organization_id=organization_id1)
+        new_user_info = USER_INFO.objects.create(user_id = new_first_subscriber.id, user_role="subscriber", user_organization_id=organization_id1)
         new_user_info.save()
 
         # subscriber 2
-        new_user = User.objects.create(username="subscriber.2@mail.com", first_name="subscriber", last_name="1", email="subscriber.2@mail.com")
-        new_user.set_password("password")
-        new_user.save()
+        new_subscriber = User.objects.create(username="subscriber.2@mail.com", first_name="subscriber", last_name="1", email="subscriber.2@mail.com")
+        new_subscriber.set_password("password")
+        new_subscriber.save()
 
-        new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role="subscriber", user_organization_id=organization_id2)
+        new_user_info = USER_INFO.objects.create(user_id = new_subscriber.id, user_role="subscriber", user_organization_id=organization_id2)
         new_user_info.save()
         
         # create catalogue elements
@@ -66,6 +67,23 @@ class StaticRouteTestCase(TestCase):
         new_data_element3.save()
         new_data_element4 = DATA_CATALOGUE_ELEMENT.objects.create(data_type='data_element', data_path='all.data2', data_schema='')
         new_data_element4.save()
+
+        # Publisher Policies
+        new_publisher_policy = PUBLISHER_POLICY.objects.create(policy_type="data_structure_based", user_id=new_first_publisher.id)
+        new_publisher_policy.save()
+
+        # Subscriber Policies
+        new_subscriber_policy = SUBSCRIBER_POLICY.objects.create(policy_type="data_structure_based", user_id=new_first_subscriber.id, delivery_end_point="ENDPOINT")
+        new_subscriber_policy.save()
+
+        # Transformations
+        new_publisher_transformation = TRANSFORMATION_ITEM.objects.create(json_path="$.organizationName", item_type="data_based", item_operator="organization_name_endpoint_restriction", item_order=0, publisher_policy_id=new_publisher_policy.id)
+        new_publisher_transformation.save()
+
+        new_subscriber_transformation = TRANSFORMATION_ITEM.objects.create(json_path="$.organizationType", item_type="data_based", item_operator="organization_type_endpoint_restriction", item_order=0, subscriber_policy_id=new_subscriber_policy.id)
+        new_subscriber_transformation.save()
+
+# Test the static route and the policies management
 
     def test_static_routing(self):
         """
@@ -92,7 +110,7 @@ class StaticRouteTestCase(TestCase):
         policy_data['policy_type'] = 'topic_based'
         
         publisher_policy_id1 = PublisherPolicyManager.addPolicy(publisher, policy_data)
-        
+       
         endpoints = SubscriberPolicyManager.retrieveStaticRouting(publisher_policy_id1)
         self.assertEqual(len(endpoints), 0)
 
@@ -359,3 +377,13 @@ class StaticRouteTestCase(TestCase):
 
         self.assertEqual(len(endpoints), 1)
         self.assertEqual(endpoints[0].subscriber_policy.getId(), subscriber_policy_id2)
+
+    def test_dynamic_routing(self):
+        """
+        General test of the dynamic routing.
+        It tests :
+            
+        """
+        policy_id = PUBLISHER_POLICY.objects.all()[0].id
+        payload = '{"organizationName":"orga1", "organizationType":"Airport operator"}'
+        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), payload)
