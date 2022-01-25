@@ -36,12 +36,13 @@ class AmqpsClient(MessagingHandler):
 
     def on_start(self, event):
         """proton callback called when the container is started. It set the TSL parameters."""
+
         event.container.ssl.client.set_trusted_ca_db(self.trusted_ca)
         # call requests the servers certificate to be verified as valid using the specified CA's public key.
         event.container.ssl.client.set_peer_authentication(SSLDomain.VERIFY_PEER)
         event.container.ssl.client.set_credentials(self.client_certificate, 
-                                                   self.client_private_key,
-                                                   self.client_password)
+                                                self.client_private_key,
+                                                self.client_password)
 
         self.container = event.container
         self.started = True

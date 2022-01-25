@@ -1,8 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
 # https://access.redhat.com/documentation/en-us/red_hat_amq/6.2/html/client_connectivity_guide/amqppython
 
-destination_dir=certs
+if [ -n "$1" ]
+then
+    if [ -d $1 ]
+    then
+        destination_dir=$1
+    else
+        echo "$1 is not a directory"
+        exit 1
+    fi
+else
+    destination_dir=certs
+fi
+
+echo "Using destination dir : $destination_dir"
+
 general_passwd=secret
 
 echo "Generate the broker certificate"
