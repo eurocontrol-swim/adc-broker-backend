@@ -109,8 +109,12 @@ def postPublisherPolicy(request):
 
             except PUBLISHER_POLICY.DoesNotExist:
                 policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
-                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                response = {'message':'Publisher policy updated'}
+
+                if policy_id != 0:
+                    SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                    response = {'message':'Publisher policy updated'}
+                else:
+                    response = {'message':'Failed to create the publisher policy'}
             
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
