@@ -1,0 +1,6 @@
+ENV http_proxy="http://10.31.255.65:8080"
+ENV https_proxy="https://10.31.255.65:8080"
+ENV HTTP_PROXY="http://10.31.255.65:8080"
+ENV HTTPS_PROXY="https://10.31.255.65:8080"
+
+RUN sed -i -e 's/https/http/' /etc/apk/repositories

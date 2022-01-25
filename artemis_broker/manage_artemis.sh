@@ -1,19 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
-cd $(dirname $0)
-
-image_name="artemis_broker"
-container_name="artemis_broker"
-
-certificates_dir=../certificates
+#broker_url="http://admin:admin@localhost:8161"
 
 function usage
 {
-    echo 'usage : manage_artemis [action]'
+    echo 'usage : manage_artemis <broker_url> <action> ...'
     echo 'action :'
-    echo ' - start'
-    echo ' - stop'
-    echo ' - restart'
     echo ' - add-user'
     echo ' - rm-user'
     echo ' - create-address'
@@ -22,33 +14,22 @@ function usage
     echo ' - delete-queue'
 }
 
-function build
+function sendRequest
+# $1 url
+# $2 operation
+# $3 operations
 {
-    echo "Building artemis broker image..."
+    body='{
+        "type": "exec",
+        "mbean": "org.apache.activemq.artemis:broker=\"0.0.0.0\"",
+        "operation":"'$2'"
+        "arguments":['$3']
+    }'
 
-    if [ -d ${certificates_dir} ]
-    then
-        mkdir -p certs
-        # we need to duplicate the certificates because the docker COPY doesn't work on targets outside the docker build context dir
-        cp ../certificates/certs/broker.ks ../certificates/certs/broker.ts certs
-        sudo docker build -t ${image_name} .
-    else
-        echo "Certificates directory \"$certificates_dir\" not found."
-    fi
-}
+    header='Content-Type:application/json'
 
-function start
-{
-    echo "Starting artemis broker..."
-    # starting the container detached
-    sudo docker run -e AMQ_USER=admin -e AMQ_PASSWORD=admin -p5771:5771 -d --name ${image_name} ${container_name}
-}
-
-function stop
-{
-    echo "Stoping artemis broker..."
-    sudo docker stop ${container_name}
-    sudo docker rm ${container_name}
+    curl -H ${header} -d "${body}" $1/console/jolokia
+    echo
 }
 
 # $1 user
@@ -80,16 +61,17 @@ function add_user
 
     echo "Adding user $user..."
 
-    local command="./adc_broker/bin/artemis user add --user-command-user $user --user-command-password $password --role $user --user admin --password admin"
-    sudo docker exec ${container_name} ${command}
+    sendRequest ${broker_url} addUser "\"$user\", \"$password\", \"$user\", false"
 
     add_consuming_permission_for_user ${user} ${queue_prefix}\#
 }
 
 # $1 user
+# $2 queue prefix
 function remove_user
 {
     local user=$1
+    local queue_prefix=$2
 
     if [ -z "$user" ]
     then
@@ -97,12 +79,17 @@ function remove_user
         return
     fi
 
+    if [ -z "$queue_prefix" ]
+    then
+        echo "Missing parameter queue_prefix"
+        return
+    fi
+
     echo "Removing user $user..."
 
-    local command="./adc_broker/bin/artemis user rm --user-command-user $user --user admin --password admin"
-    sudo docker exec ${container_name} ${command}
+    sendRequest ${broker_url} removeUser "\"$user\""
 
-    remove_consuming_permission_for_user $user $user.\#
+    remove_consuming_permission_for_user ${user} ${queue_prefix}\#
 }
 
 # $1 user
@@ -126,61 +113,25 @@ function add_consuming_permission_for_user
 
     echo "Adding a consume permission for user $user..."
 
-    # modify broker.xml to add a consume permission for the user (the broker reload it's configuration if the config file is modified)
-    local line_to_add='<security-setting match="'${pattern}'"> <permission type="send" roles="amq"/> <permission type="consume" roles="'${user}', amq"/> </security-setting>'
-    sudo docker exec ${container_name} sed -i "s|<security-settings>|<security-settings>\n${line_to_add}|" adc_broker/etc/broker.xml
+    # params :
+    # addressMatch, send, consume, createDurableQueueRoles, deleteDurableQueueRoles, createNonDurableQueueRoles, deleteNonDurableQueueRoles, manage, browse
+    sendRequest ${broker_url} 'addSecuritySettings(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)' "\"$pattern\", \"amq\", \"$user, amq\", \"\", \"\", \"\", \"\", \"\", \"\""
 }
 
-# $1 user
+# $1 pattern
 function remove_consuming_permission_for_user
 {
-    local user=$1
+    local pattern=$1
 
-    if [ -z "$user" ]
+    if [ -z "$pattern" ]
     then
-        echo "Missing parameter user"
+        echo "Missing parameter pattern"
         return
     fi
 
-    echo "Removing the consume permission for user $user..."
+    echo "Removing the consume permission for pattern $pattern..."
 
-    # modify broker.xml to remove the consume permission for the user (the broker reload it's configuration if the config file is modified)
-    local line_to_del='<security-setting match=".*"> <permission type="send" roles="amq"/> <permission type="consume" roles="'${user}', amq"/> </security-setting>'
-    sudo docker exec ${container_name} sed -i "|$line_to_del|d" adc_broker/etc/broker.xml
-}
-
-# $1 address
-function create_address
-{
-    local address=$1
-
-    if [ -z "$address" ]
-    then
-        echo "Missing parameter address"
-        return
-    fi
-
-    echo "Creating address $address..."
-
-    local command="./adc_broker/bin/artemis address create --name $address --user admin --password admin --protocol amqp --anycast --multicast"
-    sudo docker exec ${container_name} ${command}
-}
-
-# $1 address
-function delete_address
-{
-    local address=$1
-
-    if [ -z "$address" ]
-    then
-        echo "Missing parameter address"
-        return
-    fi
-
-    echo "Deleting address $address..."
-
-    local command="./adc_broker/bin/artemis address delete --name $address --user admin --password admin"
-    sudo docker exec ${container_name} ${command}
+    sendRequest ${broker_url} removeSecuritySettings "\"$pattern\""
 }
 
 # $1 address
@@ -196,8 +147,8 @@ function create_queue
 
     echo "Creating queue $address..."
 
-    local command="./adc_broker/bin/artemis queue create --name $address --user admin --password admin --auto-create-address --preserve-on-no-consumers --durable --address $address --protocol amqp --anycast"
-    sudo docker exec ${container_name} ${command}
+    # params : address, name, durable, routing type
+    sendRequest ${broker_url} 'createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)' "\"$address\", \"$address\", true, \"MULTICAST\""
 }
 
 # $1 address
@@ -213,46 +164,29 @@ function delete_queue
 
     echo "Deleting queue $address..."
 
-    local command="./adc_broker/bin/artemis queue delete --name $address --user admin --password admin"
-    sudo docker exec ${container_name} ${command}
+    # params : name, remove consumers, autoDeleteAddress
+    sendRequest ${broker_url} 'destroyQueue' "\"$address\", true, true"
 }
 
 #-------------- MAIN ---------------------------
 
-if [ -z "$1" ]
+if [ -z "$1" ] || [ -z "$2" ]
 then
     usage
     exit
 fi
 
-action=$1
+broker_url=$1
+action=$2
+shift
 shift
 
 case ${action} in
-    build)
-        build
-        ;;
-    start)
-        start
-        ;;
-    stop)
-        stop
-        ;;
-    restart)
-        stop
-        start
-        ;;
     add-user)
         add_user $*
         ;;
     rm-user)
         remove_user $*
-        ;;
-    create-address)
-        create_address $*
-        ;;
-    delete-address)
-        delete_address $*
         ;;
     create-queue)
         create_queue $*

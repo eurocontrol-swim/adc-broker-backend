@@ -1,19 +1,24 @@
 import logging
 from django.db import connection
 from django.http import HttpResponse, JsonResponse
+from rest_framework.response import Response
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 # from rest_framework.schemas import AutoSchema
 from django.shortcuts import render
 # from django.views.generic import TemplateView
 from .models import USER_INFO, ORGANIZATIONS, DATA_CATALOGUE_ELEMENT, PUBLISHER_POLICY, SUBSCRIBER_POLICY, TRANSFORMATION_ITEM
 from django.contrib.auth.models import User
-from adc_backend.settings import BROKER_AMQP_URL
 from unidecode import unidecode
 
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
+import backend.CatalogueManager as CatalogueManager
+from backend.DataBrokerProxy import *
+from backend.views_user import getUser
 from backend.Policy import *
 
 logger = logging.getLogger('adc')
@@ -29,24 +34,28 @@ logger = logging.getLogger('adc')
 
 def index(request, path = ''):
     """View function for home page of site"""
-    template_name = "index.html"
+    index = "index.html"
     context = {}
-    return render(request, template_name,context=context)
+    if request.user.is_authenticated:
+        user = getUser(request.user.id)
+        context={'user': user}
+    return render(request, index, context)
 
 @api_view(['POST'])
 @ensure_csrf_cookie
 def postDataCatalogue(request):
     """View function for create or update data catalogue element"""
     if request.method == "POST":
-        logger.info('***postDataCatalogue***')
-        logger.info(request.data['type'])
-        # create new data catalogue element
-        new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request.data['type'], data_path=request.data['path'], data_schema=request.data['schema'])
-        new_data_element.save()
-        return JsonResponse({'message':'data saved'})
+        try:
+            # Check if data element already exist
+            data_element = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['id'])
+            CatalogueManager.updateCatalogueElement(request.data)
+            return JsonResponse({'message':'Data updated'})
+        except DATA_CATALOGUE_ELEMENT.DoesNotExist:
+            CatalogueManager.addCatalogueElement(request.data)
+            return JsonResponse({'message':'Data saved'})
     else:
-        logger.info('Request method is not POST')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
 @api_view(['GET'])
 @ensure_csrf_cookie
@@ -59,18 +68,16 @@ def getDataCatalogue(request):
             data_catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(data_type__contains=policy_type.split('_')[0]).values()
         else:
             # Get all data catalogue elements from database
-            data_catalogue = DATA_CATALOGUE_ELEMENT.objects.values()
+            data_catalogue = CatalogueManager.getCatalogueElementList()
         return JsonResponse({'data':list(data_catalogue)})
     else:
-        logger.info('Request method is not GET')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
 @api_view(['DELETE'])
 @ensure_csrf_cookie
 def deleteDataElement(request):
     """View function to delete user and informations"""
     if request.method == "DELETE":
-        logger.info(request.data)
         # TODO - Math user authorization if role is 'administrator'
         # try:
         #     user = User.objects.get(email=request.data['user_email'], role='administration')
@@ -80,15 +87,10 @@ def deleteDataElement(request):
             return JsonResponse({'message':'The data element is deleted'})
 
         except DATA_CATALOGUE_ELEMENT.DoesNotExist:
-            logger.info('Data element does not exist')
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-        # except User.DoesNotExist:
-        #     logger.info('User does not exist are wrong access')
-        #     return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='Data element does not exist')
         
     else:
-        logger.info('Request method is not DELETE')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
     
 @api_view(['POST'])
 @ensure_csrf_cookie
@@ -96,20 +98,26 @@ def postPublisherPolicy(request):
     """View function for create or update data catalogue element"""
     if request.method == "POST":
         # try if user not exist by email
+        
         try:
             user_data = User.objects.get(email=request.data['user_email'])
+            try:
+                publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'])
+                policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
+                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                response = {'message':'Publisher policy created'}
 
-            policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
-            SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-
-            response = {'message':'Publisher policy saved'}
+            except PUBLISHER_POLICY.DoesNotExist:
+                policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
+                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                response = {'message':'Publisher policy updated'}
+            
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
 
         return JsonResponse(response)
     else:
-        logger.info('Request method is not POST')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
 @api_view(['GET'])
 @ensure_csrf_cookie
@@ -136,39 +144,35 @@ def getPublisherPolicy(request):
                 publisher_policies_list.append({'policy':policy, 'catalogue':list(catalogue), 'transformations':list(transformation)})
             
             response = {'policies':publisher_policies_list}
+            
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
         
         return JsonResponse(response)
+
     else:
-        logger.info('Request method is not GET')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
 @api_view(['DELETE'])
 @ensure_csrf_cookie
 def deletePublisherPolicy(request):
     """View function to delete publisher policy and transformations"""
     if request.method == "DELETE":
-        logger.info(request.data)
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
                 PublisherPolicyManager.deletePolicy(user, request.data)
-                SubscriberPolicyManager.removeStaticRoute(request.data['policy_id'])
 
                 return JsonResponse({'message':'The publisher policy is deleted'})
 
             except PUBLISHER_POLICY.DoesNotExist:
-                logger.info('Publisher policy does not exist')
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST, data='Publisher policy does not exist')
 
         except User.DoesNotExist:
-            logger.info('User does not exist')
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='User does not exist')
         
     else:
-        logger.info('Request method is not DELETE')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
 
 @api_view(['GET'])
 @ensure_csrf_cookie
@@ -179,13 +183,13 @@ def getOrganizationsName(request):
         try:
             organizations_name = ORGANIZATIONS.objects.values_list('name', flat=True).distinct()
             response = {'organizations_name':list(organizations_name)}
+
         except ORGANIZATIONS.DoesNotExist:
             response = {'message':'No organizations name found'}
         
         return JsonResponse(response)
     else:
-        logger.info('Request method is not GET')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
 @api_view(['GET'])
 @ensure_csrf_cookie
@@ -196,13 +200,13 @@ def getOrganizationsType(request):
         try:
             organizations_type = ORGANIZATIONS.objects.values_list('type', flat=True).distinct()
             response = {'organizations_type':list(organizations_type)}
+
         except ORGANIZATIONS.DoesNotExist:
             response = {'message':'No organizations type found'}
         
         return JsonResponse(response)
     else:
-        logger.info('Request method is not GET')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
 @api_view(['POST'])
 @ensure_csrf_cookie
@@ -213,17 +217,21 @@ def postSubscriberPolicy(request):
         try:
             user_data = User.objects.get(email=request.data['user_email'])
 
-            SubscriberPolicyManager.addPolicy(user_data, request.data)
+            try:
+                publisher_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
+                policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
+                response = {'message':'Subscriber policy created'}
 
-            response = {'message':'Subscriber policy saved'}
-
+            except SUBSCRIBER_POLICY.DoesNotExist:
+                policy_id = SubscriberPolicyManager.addPolicy(user_data, request.data)
+                response = {'message':'Subscriber policy updated'}
+            
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
 
         return JsonResponse(response)
     else:
-        logger.info('Request method is not POST')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
 @api_view(['GET'])
 @ensure_csrf_cookie
@@ -250,20 +258,19 @@ def getSubscriberPolicy(request):
                 subscriber_policies_list.append({'policy':policy, 'catalogue':list(catalogue), 'transformations':list(transformation)})
             
             response = {'policies':subscriber_policies_list}
+
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
         
         return JsonResponse(response)
     else:
-        logger.info('Request method is not GET')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
 @api_view(['DELETE'])
 @ensure_csrf_cookie
 def deleteSubscriberPolicy(request):
     """View function to delete publisher policy and transformations"""
     if request.method == "DELETE":
-        logger.info(request.data)
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
@@ -272,13 +279,72 @@ def deleteSubscriberPolicy(request):
                 return JsonResponse({'message':'The subscriber policy is deleted'})
 
             except SUBSCRIBER_POLICY.DoesNotExist:
-                logger.info('Subscriber policy does not exist')
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+                return Response(status=status.HTTP_400_BAD_REQUEST, data='Subscriber policy does not exist')
 
         except User.DoesNotExist:
-            logger.info('User does not exist')
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='User does not exist')
         
     else:
-        logger.info('Request method is not DELETE')
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
+
+@api_view(['POST'])
+# @ensure_csrf_cookie
+# User authentication required
+# If the user is not authenticated, return error 401
+@permission_classes([IsAuthenticated])
+def publishMessage(request):
+    if request.method == "POST":
+        logger.info("Publish message")
+        
+        try:
+            # TODO We need to update the static routes at the start of the application
+            SubscriberPolicyManager.updateStaticRouting()
+            
+            # Check if the user who sent this request have access to the policy
+            user_id = request.user.id
+            policy_id = int(request.data['policy_id'])
+            user_policies = PublisherPolicyManager.getPolicyByUser(user_id)
+
+            if len(user_policies) > 0:
+                for policy in user_policies:
+                    if policy['id'] == policy_id:
+                        message_body = request.data['message']
+                        # Static routing
+                        endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
+
+                        # Dynamic routing
+                        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), message_body, endpoints)
+
+                        if endpoints and endpoints != None:
+                            for endpoint in endpoints:
+                                DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+                        else:
+                            logger.info(f"No endpoint found for policy {policy_id}.")
+                            return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
+
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
+            
+        except any:
+            # TODO handle exceptions and returns better.
+            logger.error("woops")
+            return JsonResponse({'message':'unknown error occured'})
+
+        return JsonResponse({'message':'Your message is published'})
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
+
+class TestView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        content = {'message': 'This is a test from GET!'}
+        return Response(content)
+
+@api_view(['POST'])
+# If the user is not authenticated, return error 401
+@permission_classes([IsAuthenticated])
+def Test(request):
+    content = {'message': 'This is a test from POST!'}
+    logger.info(request.user.id)
+    return Response(content)

@@ -32,14 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'backend',
     'rest_framework', # Django REST framework
+    'rest_framework_swagger',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -66,6 +68,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {  
+                    #Resolves the problem that the staticfiles template tag was deprecated in Django 2.2 and was finally removed in Django 3.0.
+                    'staticfiles': 'django.templatetags.static',
+                 },
         },
     },
 ]
@@ -84,7 +90,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'localhost',
+        'HOST': os.environ.get("DATABASE_HOST", "localhost"),
         'PORT': '5432',
     }
 }
@@ -129,19 +135,30 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.environ.get("STATIC_FILES_DIRS", "static"),
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-BROKER_AMQP_URL = 'amqps://adcbroker:5771/'
+# broker settings
+
+BROKER_HOST = os.environ.get("AMQP_BROKER_HOST", "localhost")
+BROKER_ADMIN_USER = os.environ.get("AMQP_BROKER_ADMIN", "admin")
+BROKER_ADMIN_PASSWORD = os.environ.get("AMQP_BROKER_ADMIN_PASSWORD", "admin")
+BROKER_MANAGER_URL = 'http://' + BROKER_ADMIN_USER + ':' + BROKER_ADMIN_PASSWORD + '@' + BROKER_HOST + ':8161'
+BROKER_AMQPS_URL = 'amqps://' + BROKER_ADMIN_USER + ':' + BROKER_ADMIN_PASSWORD + '@' + BROKER_HOST + ':5771/'
 BROKER_MANAGER_SCRIPT = os.path.join(BASE_DIR, 'artemis_broker', 'manage_artemis.sh')
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))
+# amqps client settings
 
-# Redirect to home URL after login (Default redirects to /accounts/profile/)
-LOGIN_REDIRECT_URL = '/'
+AMQPS_CERTIFICATES_DIR = os.environ.get("AMQPS_CERTIFICATES_DIR", os.path.join(BASE_DIR, "certificates", "certs"))
+AMQPS_TRUSTED_CA = os.path.join(AMQPS_CERTIFICATES_DIR, "broker_cert.pem")
+AMQPS_CLIENT_CERTIFICATE = os.path.join(AMQPS_CERTIFICATES_DIR, "client_cert.pem")
+AMQPS_CLIENT_PRIVATE_KEY = os.path.join(AMQPS_CERTIFICATES_DIR, "client_private_key.pem")
+AMQPS_CLIENT_PASSWORD = "secret"
+
+# Redirect to home URL after login and logout (Default redirects to /accounts/profile/)
+REDIRECT_URL = '/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -190,19 +207,21 @@ LOGGING = {
     }
 }
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-#     'EXCEPTION_HANDLER': 'utils.exceptions.base_exception_handler',
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'utils.exceptions.base_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        )
+}
 
-# """ REST_FRAMEWORK = {
-#     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-#     'EXCEPTION_HANDLER': 'utils.exceptions.base_exception_handler',
-    
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     )
-# } """
+# email configs
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = str(os.getenv('EMAIL_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_PASSWORD'))
+
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend" # During development only
+# EMAIL_FILE_PATH = str(BASE_DIR.joinpath('sent_emails'))

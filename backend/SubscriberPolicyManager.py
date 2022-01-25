@@ -2,50 +2,38 @@ import logging
 from django.contrib.auth.models import User
 from unidecode import unidecode
 from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT
-from adc_backend.settings import BROKER_AMQP_URL
 from backend.Policy import *
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
-import backend.DataBrokerProxy as DataBrokerProxy
+from backend.DataBrokerProxy import *
 
 logger = logging.getLogger('adc')
 _static_routes = {}
 
-def addPolicy(user_data, request_data):
-    """Add or update a subscriber policy in the database"""
+def addPolicy(user_data, request_data) -> int:
+    """Add a subscriber policy in the database"""
     policy_id = request_data['policy_id']
     transformations = request_data['transformations']
     # delivery_end_point=request_data['delivery_end_point'],
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
 
-    # Try if subscriber policy exist for update
-    try:
-        subscriber_policy_data = SUBSCRIBER_POLICY.objects.get(id=policy_id)
-        subscriber_policy_data.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
-        transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
-        transformation_item.delete()
+    # create new subscriber policy
+    subscriber_policy_data = SUBSCRIBER_POLICY.objects.create(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    subscriber_policy_data.save()
+    policy_id = subscriber_policy_data.id
 
-        logger.info(f"Updating subscriber policy {policy_id}")
+    # Get user organization id
+    organization_id = USER_INFO.objects.get(user_id=user_data.id).user_organization_id
 
-    except SUBSCRIBER_POLICY.DoesNotExist:
-        # create new subscriber policy
-        subscriber_policy_data = SUBSCRIBER_POLICY.objects.create(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
-        subscriber_policy_data.save()
-        policy_id = subscriber_policy_data.id
+    # Save the delivery end point
+    queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user_data.username)
+    queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
+    end_point = f"{queue_name}"
+    subscriber_policy = SUBSCRIBER_POLICY.objects.filter(id=policy_id).update(delivery_end_point=unidecode(end_point.lower()))
 
-        # Get user organization id
-        organization_id = USER_INFO.objects.get(user_id=user_data.id).user_organization_id
+    logger.info(f"Creating subscriber policy {policy_id}")
 
-        # Save the delivery end point
-        queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user_data.first_name, user_data.last_name)
-        queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
-        end_point = f"{BROKER_AMQP_URL}{queue_name}"
-        subscriber_policy = SUBSCRIBER_POLICY.objects.filter(id=policy_id).update(delivery_end_point=unidecode(end_point.lower()))
-
-        logger.info(f"Creating subscriber policy {policy_id}")
-
-        # Create the corresponding queue in the broker
-        DataBrokerProxy.createQueue(queue_name)
-
+    # Create the corresponding queue in the broker
+    DataBrokerProxy.createQueue(queue_name)
 
     transformations_data = []
 
@@ -56,6 +44,33 @@ def addPolicy(user_data, request_data):
         transformations_data.append(new_transformation_item)
 
     SubscriberPolicyManager.updateStaticRouting()
+
+    return policy_id
+
+def updatePolicy(user_data, request_data) -> int:
+    """Update a subscriber policy in the database"""
+    policy_id = request_data['policy_id']
+    transformations = request_data['transformations']
+    catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
+
+    subscriber_policy_data = SUBSCRIBER_POLICY.objects.get(id=policy_id)
+    subscriber_policy_data.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
+    transformation_item.delete()
+
+    logger.info(f"Updating subscriber policy {policy_id}")
+
+    transformations_data = []
+
+    for index, item in enumerate(transformations):
+        # create new transformation items
+        new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, subscriber_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
+        new_transformation_item.save()
+        transformations_data.append(new_transformation_item)
+
+    SubscriberPolicyManager.updateStaticRouting()
+
+    return policy_id
 
 def deletePolicy(user_data, request_data) -> None:
     """Delete a subscriber policy from the database"""
@@ -69,7 +84,7 @@ def deletePolicy(user_data, request_data) -> None:
     adc_user = ADCUser(user_data)
 
     # delete the corresponding queue in the broker
-    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.first_name, user_data.last_name)
+    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.username)
     queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
     DataBrokerProxy.deleteQueue(queue_name)
 
@@ -90,7 +105,7 @@ def getAllPolicies():
 def findStaticRouting(publisher_policy, subscriber_policies = None):
     """Find all the static endpoints for a publisher policy and store the result"""
 
-    logger.info(f"Searching static routing for policy {str(publisher_policy.getId())}")
+    logger.info(f"Searching static routing for publisher policy: {str(publisher_policy.getId())}")
 
     # to find a static route we take all the endpoint available and remove the ones who doesn't match restrictions
     endpoints = []
@@ -105,6 +120,18 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
 
     to_remove = []
 
+    logger.debug("Search endpoints that doesn't match the publisher_policy topic")
+    # find all the endpoints that doesn't match the publisher_policy topic
+    for endpoint in endpoints:
+        if not publisher_policy.checkTopicMatch(endpoint.subscriber_policy):
+            to_remove.append(endpoint)
+
+    # we remove them is a second time to avoid the modification of the list during the iteration
+    for endpoint in to_remove:
+        endpoints.remove(endpoint)
+
+    to_remove.clear()
+    
     # find all the endpoints that doesn't match the publisher_policy restrictions
     logger.debug("Search endpoints that doesn't match the publisher_policy restrictions")
     for transformation in publisher_policy.transformations:
@@ -117,7 +144,7 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
     for endpoint in to_remove:
         endpoints.remove(endpoint)
 
-    to_remove = []
+    to_remove.clear()
 
     # find all the endpoints who have an uncompatible restriction with the publisher_policy
     logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
@@ -167,3 +194,62 @@ def updateStaticRouting():
 
         findStaticRouting(policy, subscriber_policies)
 
+def retrieveStaticRouting(publisher_policy_id):
+    return _static_routes.get(publisher_policy_id)
+
+def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies = None):
+    """Find all the dynamic endpoints for a publisher policy and store the result"""
+
+    logger.info(f"Searching dynamic routing for publisher policy: {str(publisher_policy.getId())}")
+
+    to_remove = []
+
+    publisher_policy.processPayload(payload)
+    
+    # find all the endpoints that doesn't match the publisher_policy restrictions
+    logger.debug("Search endpoints that doesn't match the publisher_policy restrictions")
+    for transformation in publisher_policy.transformations:
+        if not transformation.isStatic():
+            for endpoint in endpoints:
+                if not transformation.checkRestriction(endpoint.subscriber_policy):
+                    to_remove.append(endpoint)
+ 
+    # we remove them is a second time to avoid the modification of the list during the iteration
+    for endpoint in to_remove:
+        endpoints.remove(endpoint)
+
+    to_remove.clear()
+
+    # find all the endpoints who have an uncompatible restriction with the publisher_policy
+    logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
+    for endpoint in endpoints:
+        logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
+        endpoint.subscriber_policy.processPayload(payload)
+        for transformation in endpoint.subscriber_policy.transformations:
+            logger.debug(f"Transformation : {transformation.data.id}")
+            if(not transformation.isStatic() and
+               not transformation.checkRestriction(publisher_policy)):
+                to_remove.append(endpoint)
+                break
+
+    # we remove them is a second time to avoid the modification of the list during the iteration
+    for endpoint in to_remove:
+        endpoints.remove(endpoint)
+
+    if len(endpoints) > 0:
+        logger.info(f"Dynamic endpoints found for policy {str(publisher_policy.getId())} :")
+
+        for endpoint in endpoints:
+            logger.info(f" - {str(endpoint.subscriber_policy.getId())} : {endpoint.subscriber_policy.getEndPointAddress()}")
+    else:
+        logger.info(f"No dynamic endpoint found for policy {str(publisher_policy.getId())}")
+
+def getPolicyByUser(user_id):
+    """Get subscriber policy by User id"""
+    policy = SUBSCRIBER_POLICY.objects.get(user_id=user_id)
+    return policy
+
+def getPolicyById(policy_id):
+    """Get subscriber policy by id"""
+    policy = SUBSCRIBER_POLICY.objects.get(id=policy_id)
+    return policy

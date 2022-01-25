@@ -34,3 +34,15 @@ Run `docker start adc-postgres`
 Edit `/backend/models.py`.
 Run `python manage.py makemigrations` to generate a new migration.
 Run `python manage.py migrate` to apply migrations.
+
+## Create certificates for TLS connections
+Java is needed to get the keytool command
+Run `export PATH=${PATH}:<path to JDK>/bin/`
+Run `cd certificates`
+Run `./createCertificates.sh`
+
+## Build and run Artemis broker
+Run `cd artemis_broker`
+Run `docker build -t artemis_broker .`
+Run `docker run -e AMQ_USER=admin -e AMQ_PASSWORD=admin -p5771:5771 -v '<absolute path to adc-broker-backend>/certificates/certs:/certs' --name artemis_broker artemis_broker`
+

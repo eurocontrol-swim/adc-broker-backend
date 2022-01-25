@@ -41,8 +41,6 @@ try:
     thread = threading.Thread(target=run_container, args=(container,), daemon=True)
 
     sender.create_endpoint(opts.address)
-    sender.remove_endpoint(opts.address)
-    sender.remove_endpoint(opts.address)
 
     thread.start()
 
