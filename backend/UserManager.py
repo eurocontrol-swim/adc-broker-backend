@@ -11,10 +11,7 @@ def addUser(request_data):
     """Add user in the database and in the broker"""
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot create user, the AMQP broker is not started")
-<<<<<<< HEAD
         # TODO Add an exception and catch it in the calling method to return a http error 
-=======
->>>>>>> 399bc52f4a9b7d45dc20ea68ea72a7af7077194b
         return
 
     try:
@@ -65,12 +62,7 @@ def addUser(request_data):
             # create user in the broker
             queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.username)
             broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.username)
-<<<<<<< HEAD
             DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
-=======
-            # TODO handle password
-            DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)
->>>>>>> 399bc52f4a9b7d45dc20ea68ea72a7af7077194b
 
 
 def updateUser(request_data):
@@ -166,11 +158,11 @@ def getuserList():
     return user_list
 
 def deleteUser(user_data):
+    """Delete user in the database and the broker"""
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot delete user, the AMQP broker is not started")
         return
 
-    """Delete user in the database and the broker"""
     # TODO - Math user authorization if role is 'administrator'
     # try:
     #     user = User.objects.get(email=ruser_data['user_email'], role='administration')
