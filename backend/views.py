@@ -298,7 +298,7 @@ def publishMessage(request):
         
         try:
             # TODO We need to update the static routes at the start of the application
-            SubscriberPolicyManager.updateStaticRouting()
+            # SubscriberPolicyManager.updateStaticRouting()
             
             # Check if the user who sent this request have access to the policy
             user_id = request.user.id
