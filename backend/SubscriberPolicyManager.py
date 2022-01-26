@@ -52,10 +52,14 @@ def updatePolicy(user_data, request_data) -> int:
     transformations = request_data['transformations']
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
 
-    subscriber_policy_data = SUBSCRIBER_POLICY.objects.get(id=policy_id)
-    subscriber_policy_data.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    subscriber_policy_data = SUBSCRIBER_POLICY.objects.filter(id=policy_id)
+    subscriber_policy_data.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    # Delete old transformations items
     transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
     transformation_item.delete()
+    # Delete old associations items
+    association_item = POLICY_ASSOCIATION.objects.filter(subscriber_policy_id = policy_id)
+    association_item.delete()
 
     logger.info(f"Updating subscriber policy {policy_id}")
 

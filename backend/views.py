@@ -105,12 +105,12 @@ def postPublisherPolicy(request):
                 publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'])
                 policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
                 SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                response = {'message':'Publisher policy created'}
+                response = {'message':'Publisher policy updated'}
 
             except PUBLISHER_POLICY.DoesNotExist:
                 policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
                 SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                response = {'message':'Publisher policy updated'}
+                response = {'message':'Publisher policy created'}
             
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
@@ -220,11 +220,11 @@ def postSubscriberPolicy(request):
             try:
                 publisher_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
                 policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
-                response = {'message':'Subscriber policy created'}
+                response = {'message':'Subscriber policy updated'}
 
             except SUBSCRIBER_POLICY.DoesNotExist:
                 policy_id = SubscriberPolicyManager.addPolicy(user_data, request.data)
-                response = {'message':'Subscriber policy updated'}
+                response = {'message':'Subscriber policy created'}
             
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
