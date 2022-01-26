@@ -216,7 +216,7 @@ def retrieveStaticRouting(publisher_policy_id):
 
     return endpoints
 
-def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies = None):
+def findDynamicRoutingForPublisherPolicy(publisher_policy, payload, endpoints, subscriber_policies = None):
     """Find all the dynamic endpoints for a publisher policy and store the result"""
 
     logger.info(f"Searching dynamic routing for publisher policy: {str(publisher_policy.getId())}")
@@ -239,22 +239,6 @@ def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies
 
     to_remove.clear()
 
-    # find all the endpoints who have an uncompatible restriction with the publisher_policy
-    logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
-    for endpoint in endpoints:
-        logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
-        endpoint.subscriber_policy.processPayload(payload)
-        for transformation in endpoint.subscriber_policy.transformations:
-            logger.debug(f"Transformation : {transformation.data.id}")
-            if(not transformation.isStatic() and
-               not transformation.checkRestriction(publisher_policy)):
-                to_remove.append(endpoint)
-                break
-
-    # we remove them is a second time to avoid the modification of the list during the iteration
-    for endpoint in to_remove:
-        endpoints.remove(endpoint)
-
     if len(endpoints) > 0:
         logger.info(f"Dynamic endpoints found for policy {str(publisher_policy.getId())} :")
 
@@ -262,6 +246,20 @@ def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies
             logger.info(f" - {str(endpoint.subscriber_policy.getId())} : {endpoint.subscriber_policy.getEndPointAddress()}")
     else:
         logger.info(f"No dynamic endpoint found for policy {str(publisher_policy.getId())}")
+
+def findDynamicRoutingWithPayload(publisher_policy, payload, endpoint):
+    """Search endpoints who have an uncompatible restriction with the publisher_policy from Payload message"""
+    logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
+    logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
+
+    endpoint.subscriber_policy.processPayload(payload)
+    for transformation in endpoint.subscriber_policy.transformations:
+        logger.debug(f"Transformation : {transformation.data.id}")
+        if(not transformation.isStatic() and
+            not transformation.checkRestriction(publisher_policy)):
+            to_remove.append(endpoint)
+            return False
+    return True
 
 def getPolicyByUser(user_id):
     """Get the subscriber policy objects by User id"""

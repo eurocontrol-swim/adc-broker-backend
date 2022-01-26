@@ -309,15 +309,18 @@ def publishMessage(request):
                 for policy in user_policies:
                     if policy['id'] == policy_id:
                         message_body = request.data['message']
+                        payload = Payload(message_body)
                         # Static routing
                         endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
 
                         # Dynamic routing
-                        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), message_body, endpoints)
+                        SubscriberPolicyManager.findDynamicRoutingForPublisherPolicy(PublisherPolicy.createById(policy_id), payload, endpoints)
 
                         if endpoints and endpoints != None:
                             for endpoint in endpoints:
-                                DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+                                copy_payload = Payload(payload.body)
+                                if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):
+                                    DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
                         else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
                             return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})

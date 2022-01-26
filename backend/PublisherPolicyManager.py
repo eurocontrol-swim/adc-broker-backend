@@ -21,6 +21,8 @@ def addPolicy(user_data, request_data) -> int:
         new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, publisher_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
         new_transformation_item.save()
 
+    SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+
     return policy_id
 
 def updatePolicy(user_data, request_data) -> int:

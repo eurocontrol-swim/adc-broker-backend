@@ -3,6 +3,7 @@ from django.test import TestCase, override_settings
 from django.conf import settings
 from backend.models import *
 from backend.Policy import *
+from backend.DataBrokerProxy import *
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
 
@@ -15,7 +16,7 @@ class BackendTestCase(TestCase):
         """Populate the database with users, organizations, catalogue elements and policies"""
 
         # organization Airport oprator
-        new_organization = ORGANIZATIONS.objects.create(name='orga1', type='Airport operator')
+        new_organization = ORGANIZATIONS.objects.create(name='easyJet', type='airline')
         new_organization.save()
         organization_id1 = new_organization.id
 
@@ -68,22 +69,7 @@ class BackendTestCase(TestCase):
         new_data_element4 = DATA_CATALOGUE_ELEMENT.objects.create(data_type='data_element', data_path='all.data2', data_schema='')
         new_data_element4.save()
 
-        # Publisher Policies
-        new_publisher_policy = PUBLISHER_POLICY.objects.create(policy_type="data_structure_based", user_id=new_first_publisher.id)
-        new_publisher_policy.save()
-
-        # Subscriber Policies
-        new_subscriber_policy = SUBSCRIBER_POLICY.objects.create(policy_type="data_structure_based", user_id=new_first_subscriber.id, delivery_end_point="ENDPOINT")
-        new_subscriber_policy.save()
-
-        # Transformations
-        new_publisher_transformation = TRANSFORMATION_ITEM.objects.create(json_path="$.organizationName", item_type="data_based", item_operator="organization_name_endpoint_restriction", item_order=0, publisher_policy_id=new_publisher_policy.id)
-        new_publisher_transformation.save()
-
-        new_subscriber_transformation = TRANSFORMATION_ITEM.objects.create(json_path="$.organizationType", item_type="data_based", item_operator="organization_type_endpoint_restriction", item_order=0, subscriber_policy_id=new_subscriber_policy.id)
-        new_subscriber_transformation.save()
-
-# Test the static route and the policies management
+Test the static route and the policies management
 
     def test_static_routing(self):
         """
@@ -101,7 +87,7 @@ class BackendTestCase(TestCase):
         # create publisher policy
         transformations = []
         # match with organization type : Airport operator
-        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
+        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
 
         policy_data = {}
         policy_data['policy_id'] = '0' # 0 to force creation
@@ -116,7 +102,7 @@ class BackendTestCase(TestCase):
 
         # create subscriber policy
         transformations.clear()
-        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'endpoint_restriction', 'organization_name':'orga1', 'organization_type':''})
+        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':'orga1', 'organization_type':''})
         policy_data['transformations'] = transformations
 
         subscriber_policy_id1 = SubscriberPolicyManager.addPolicy(subscriber, policy_data)
@@ -147,8 +133,8 @@ class BackendTestCase(TestCase):
 
         # add a subscriber policy with multiples restrictions that match
         transformations.clear()
-        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'endpoint_restriction', 'organization_name':'orga1', 'organization_type':''})
-        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
+        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'organization_name_endpoint_restriction', 'organization_name':'orga1', 'organization_type':''})
+        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
         policy_data['transformations'] = transformations
         policy_data['catalogue_id'] = DATA_CATALOGUE_ELEMENT.objects.get(data_path='all.topic1').id
 
@@ -183,8 +169,8 @@ class BackendTestCase(TestCase):
 
         # add a subscriber policy with multiples restrictions that doesn't match
         transformations.clear()
-        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'endpoint_restriction', 'organization_name':'orga2', 'organization_type':''})
-        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
+        transformations.append({'json_path':'', 'item_type':'organization_name', 'item_operator':'organization_name_endpoint_restriction', 'organization_name':'orga2', 'organization_type':''})
+        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
         policy_data['transformations'] = transformations
         policy_data['catalogue_id'] = DATA_CATALOGUE_ELEMENT.objects.get(data_path='all.topic1').id
 
@@ -332,8 +318,8 @@ class BackendTestCase(TestCase):
         # create publisher policy
         transformations = []
         # match with organization type : Airport operator
-        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
-        transformations.append({'json_path':'dummy', 'item_type':'data_based', 'item_operator':'endpoint_restriction', 'organization_name':'', 'organization_type':''})
+        transformations.append({'json_path':'', 'item_type':'organization_type', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':'', 'organization_type':'Airport operator'})
+        transformations.append({'json_path':'dummy', 'item_type':'data_based', 'item_operator':'organization_name_endpoint_restriction', 'organization_name':'', 'organization_type':''})
         transformations.append({'json_path':'dummy', 'item_type':'data_based', 'item_operator':'payload_extraction', 'organization_name':'', 'organization_type':''})
 
         policy_data = {}
@@ -378,12 +364,63 @@ class BackendTestCase(TestCase):
         self.assertEqual(len(endpoints), 1)
         self.assertEqual(endpoints[0].subscriber_policy.getId(), subscriber_policy_id2)
 
-    def test_dynamic_routing(self):
+    def test_payload_extraction(self):
         """
-        General test of the dynamic routing.
+        General test of the payload extraction.
         It tests :
-            
+            subscriber policy add
+            publisher policy add
+            if no topics
+            static restrictions (single/multiples)
+            dynamic restrictions (single/multiples)
+            publishData with extracted data
         """
-        policy_id = PUBLISHER_POLICY.objects.all()[0].id
-        payload = '{"organizationName":"orga1", "organizationType":"Airport operator"}'
-        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), payload)
+
+        publisher = User.objects.get(username='publisher.1@mail.com')
+        subscriber = User.objects.get(username='subscriber.1@mail.com')
+
+        transformations = []
+        policy_data = {}
+
+        # Create a Subscriber policy
+        # Extract payload to match with JsonPath, Only for easyJet company
+        transformations.append({'json_path':'$.FlightLeg[?(@.LegIdentifier.Airline=="easyJet")]', 'item_type':'data_based', 'item_operator':'payload_extraction', 'organization_name':None, 'organization_type':None})
+        
+        policy_data['policy_id'] = '0' # 0 to force creation
+        policy_data['transformations'] = transformations
+        policy_data['catalogue_id'] = DATA_CATALOGUE_ELEMENT.objects.get(data_path='all.data1').id
+        policy_data['policy_type'] = 'data_structure_based'
+
+        subscriber_policy_id1 = SubscriberPolicyManager.addPolicy(subscriber, policy_data)
+
+        # Reset transformations
+        transformations.clear()
+
+        # Create Publisher policy
+        # match with organization type : airline
+        transformations.append({'json_path':None, 'item_type':'organization_type', 'item_operator':'organization_type_endpoint_restriction', 'organization_name':None, 'organization_type':'airline'})
+        policy_data['transformations'] = transformations
+
+        publisher_policy_id1 = PublisherPolicyManager.addPolicy(publisher, policy_data)
+
+        # Get Static Endpoints
+        endpoints = SubscriberPolicyManager.retrieveStaticRouting(publisher_policy_id1)
+        self.assertEqual(len(endpoints), 1)
+        self.assertEqual(endpoints[0].subscriber_policy.getId(), subscriber_policy_id1)
+
+        # Publish message with Json Payload
+        message_body = '{"@TimeStamp": "2014-07-09T14:39:34","@Target": "Test","FlightLeg":[{"LegIdentifier": { "Airline": "easyJet", "FlightNumber": "8998", "OperationalSuffix": "A", "DepartureAirport": "LGW", "ArrivalAirport": "ALC","OriginDate": "2014-07-09"}}]}'
+        payload = Payload(message_body)
+        
+        # Apply dynamic routing with json payload
+        SubscriberPolicyManager.findDynamicRoutingForPublisherPolicy(PublisherPolicy.createById(publisher_policy_id1), payload, endpoints)
+
+        if endpoints and endpoints != None:
+            for endpoint in endpoints:
+                logger.info('ORIGINAL:')
+                logger.info(payload.body)
+                copy_payload = Payload(payload.body)
+                if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(publisher_policy_id1), copy_payload, endpoint):
+                    logger.info('EXTRACT PAYLOAD:')
+                    logger.info(copy_payload.body)
+                    DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())

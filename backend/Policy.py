@@ -81,7 +81,8 @@ class TransformationItem:
             return self.data.organization_name == policy.user.getOrganizationName()
         elif self.data.item_type == "data_based":
             if self.data.item_operator == "payload_extraction":
-                logger.warn(f"Unhandled case : {self.data.item_type}")
+                return True
+                # logger.warn(f"Unhandled case : {self.data.item_type}")
             elif self.data.item_operator == "organization_name_endpoint_restriction":
                 logger.debug(f"organization_name_endpoint_restriction : {self.__payload_data}, {policy.user.getOrganizationName()}")
                 return policy.user.getOrganizationName() == self.__payload_data
@@ -98,18 +99,22 @@ class TransformationItem:
     def processPayload(self, payload):
         """"""
         logger.info('processPayload')
+        # TODO - Check exceptions for return error status and no payload
         if self.data.json_path is not None:
-            # TODO - Extract string from payload with JsonPath
             json_path = self.data.json_path
             try:
-                json_data = json.loads(payload)
+                json_data = json.loads(payload.body)
                 jsonpath_expr = parse(json_path)
                 matches = jsonpath_expr.find(json_data)
 
                 if(len(matches) > 0):
                     for match in matches:
                         logger.info("Extracted: " + str(match.value))
-                        self.__payload_data = match.value
+                        # self.__payload_data = match.value
+                        if self.data.item_operator == "payload_extraction":
+                            payload.body = match.value
+                        else:
+                            self.__payload_data = match.value
                 else:
                     logger.info("No match found")
                     self.__payload_data = ''
@@ -233,3 +238,8 @@ class SubscriberPolicy(Policy):
     def getEndPointAddress(self) -> str:
         """Return the address of the subscriber endpoint"""
         return self._policy_data.delivery_end_point
+
+class Payload:
+    """Payload message"""
+    def __init__(self, body) -> None:
+        self.body = body
