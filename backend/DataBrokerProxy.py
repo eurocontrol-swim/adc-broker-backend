@@ -115,14 +115,15 @@ class DataBrokerProxy:
         DataBrokerProxy._manage_broker(f"update-user-password {user_name} {password}")
 
     @staticmethod
-    def deleteUser(user_name) -> bool:
+    def deleteUser(user_name, queue_prefix) -> bool:
         """
         Delete a user in the broker
          - user_name : username
+         - queue_prefix : queue prefix used to remove the user access. 
         """
 
         logger.info(f"Deleting user {user_name} in the broker...")
-        DataBrokerProxy._manage_broker(f"remove-user {user_name}")
+        DataBrokerProxy._manage_broker(f"rm-user {user_name} {queue_prefix}")
 
     @staticmethod
     def createQueue(name):

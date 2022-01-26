@@ -310,6 +310,7 @@ def publishMessage(request):
             user_policies = PublisherPolicyManager.getPolicyByUser(user_id)
 
             if len(user_policies) > 0:
+                # TODO Add an error response when the policy is not found
                 for policy in user_policies:
                     if policy['id'] == policy_id:
                         message_body = request.data['message']

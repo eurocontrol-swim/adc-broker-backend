@@ -32,7 +32,7 @@ function sendRequest
 
     echo $request_result
 
-    local code=$(grep -o -E '"status":[0-9]+' | cut -f2 -d:)
+    local code=$(echo "$request_result" | grep -o -E '"status":[0-9]+' | cut -f2 -d:)
 
     if [ "$code" == "200" ]
     then
@@ -195,7 +195,7 @@ function create_queue
     echo "Creating queue $address..."
 
     # params : address, name, durable, routing type
-    sendRequest ${broker_url} 'createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)' "\"$address\", \"$address\", true, \"MULTICAST\""
+    sendRequest ${broker_url} 'createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)' "\"$address\", \"$address\", true, \"ANYCAST\""
     return $?
 }
 
@@ -263,4 +263,4 @@ case ${action} in
         result_code=2
 esac
 
-return result_code
+exit $result_code

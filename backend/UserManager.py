@@ -11,6 +11,7 @@ def addUser(request_data):
     """Add user in the database and in the broker"""
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot create user, the AMQP broker is not started")
+        # TODO Add an exception and catch it in the calling method to return a http error 
         return
 
     try:
@@ -61,8 +62,7 @@ def addUser(request_data):
             # create user in the broker
             queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.username)
             broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.username)
-            # TODO handle password
-            DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)
+            DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
 
 
 def updateUser(request_data):
@@ -131,7 +131,8 @@ def updateUser(request_data):
             elif previous_role == 'subscriber':
                 # delete user in the broker
                 broker_user_name = DataBrokerProxy.generateBrokerUsername(user.username)
-                DataBrokerProxy.deleteUser(broker_user_name)
+                queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user.username)
+                DataBrokerProxy.deleteUser(broker_user_name, queue_prefix)
 
     except User.DoesNotExist:
         logger.info("User does not exist")
@@ -166,10 +167,13 @@ def deleteUser(user_data):
     # try:
     #     user = User.objects.get(email=ruser_data['user_email'], role='administration')
     
-    if USER_INFO.objects.get(user_id=user_data.id).user_role == 'subscriber':
+    user_info = USER_INFO.objects.get(user_id=user_data.id)
+
+    if user_info.user_role == 'subscriber':
         # delete user in the broker
         broker_user_name = DataBrokerProxy.generateBrokerUsername(user_data.username)
-        DataBrokerProxy.deleteUser(broker_user_name)
+        queue_prefix = DataBrokerProxy.generateQueuePrefix(user_info.user_organization.id, user_data.username)
+        DataBrokerProxy.deleteUser(broker_user_name, queue_prefix)
 
     user_data.delete()
     logger.info("The user is deleted")
