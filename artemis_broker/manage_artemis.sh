@@ -32,7 +32,11 @@ function sendRequest
 
     echo $request_result
 
+<<<<<<< HEAD
     local code=$(echo "$request_result" | grep -o -E '"status":[0-9]+' | cut -f2 -d:)
+=======
+    local code=$(grep -o -E '"status":[0-9]+' | cut -f2 -d:)
+>>>>>>> 399bc52f4a9b7d45dc20ea68ea72a7af7077194b
 
     if [ "$code" == "200" ]
     then
@@ -195,7 +199,11 @@ function create_queue
     echo "Creating queue $address..."
 
     # params : address, name, durable, routing type
+<<<<<<< HEAD
     sendRequest ${broker_url} 'createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)' "\"$address\", \"$address\", true, \"ANYCAST\""
+=======
+    sendRequest ${broker_url} 'createQueue(java.lang.String,java.lang.String,boolean,java.lang.String)' "\"$address\", \"$address\", true, \"MULTICAST\""
+>>>>>>> 399bc52f4a9b7d45dc20ea68ea72a7af7077194b
     return $?
 }
 
