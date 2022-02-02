@@ -308,7 +308,13 @@ def publishMessage(request):
             if len(user_policies) > 0:
                 for policy in user_policies:
                     if policy['id'] == policy_id:
-                        message_body = request.data['message']
+                        # If payload is a FILE
+                        if request.FILES.get('message'):
+                            # Decode this file to string
+                            message_body = request.FILES.get('message').read()
+                        else:
+                            message_body = request.data['message']
+
                         payload = Payload(message_body)
                         # Static routing
                         endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
@@ -317,13 +323,14 @@ def publishMessage(request):
                         SubscriberPolicyManager.findDynamicRoutingForPublisherPolicy(PublisherPolicy.createById(policy_id), payload, endpoints)
 
                         if endpoints and endpoints != None:
-                            for endpoint in endpoints:
+                            for endpoint in endpoints:     
                                 copy_payload = Payload(payload.body)
-                                if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):
+                                if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):                                    
+                                    # Publish data with payload
                                     DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
                         else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
-                            return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
+                            # return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
 
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')

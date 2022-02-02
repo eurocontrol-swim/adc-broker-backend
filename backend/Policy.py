@@ -96,7 +96,7 @@ class TransformationItem:
 
         return False
 
-    def processPayload(self, payload):
+    def processTransformPayload(self, payload) -> bool:
         """"""
         logger.info('processPayload')
         # TODO - Check exceptions for return error status and no payload
@@ -109,21 +109,25 @@ class TransformationItem:
 
                 if(len(matches) > 0):
                     for match in matches:
-                        logger.info("Extracted: " + str(match.value))
+                        # logger.info("Extracted: " + str(match.value))
                         # self.__payload_data = match.value
                         if self.data.item_operator == "payload_extraction":
                             payload.body = match.value
                         else:
                             self.__payload_data = match.value
+                    return True
                 else:
                     logger.info("No match found")
                     self.__payload_data = ''
-            except ValueError as e:
-                logger.info("Error with Json_path")
+                    return False
+            except:
+                logger.info("Error occured")
                 self.__payload_data = ''
+                return False
         else:
             logger.info("No Json_path")
             self.__payload_data = ''
+            return False
 
 class Policy:
     """Data structure base type string"""
@@ -187,7 +191,9 @@ class Policy:
     def processPayload(self, payload):
         """Process the payload for all policy transformations"""
         for transformation in self.transformations:
-            transformation.processPayload(payload)
+            if not transformation.processTransformPayload(payload):
+                return False
+        return True
 
 class PublisherPolicy(Policy):
     """Publisher policy"""
