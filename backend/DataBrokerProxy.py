@@ -7,6 +7,11 @@ from proton.reactor import Container
 
 logger = logging.getLogger('adc')
 
+class BrokerRequestError(Exception):
+    """"Raised when a broker manager script call return an error"""
+    pass
+
+
 class DataBrokerProxy:
     """Allow to administrate and to connect to the broker"""
 
@@ -37,7 +42,7 @@ class DataBrokerProxy:
     @staticmethod
     def generateQueuePrefix(organization_id, username):
         """Generate the first part of queue name"""
-        name = username.split('@')[0]
+        name = DataBrokerProxy.generateBrokerUsername(username)
         return f"{organization_id}.{name}."
 
     @staticmethod
@@ -46,9 +51,9 @@ class DataBrokerProxy:
         return f"{prefix}{suscriber_policy_id}"
 
     @staticmethod
-    def generateBrokerUsername(user_first_name, user_last_name):
-        """Generate the username for the broker"""
-        return f"{user_first_name}.{user_last_name}"
+    def generateBrokerUsername(username):
+        """Generate the username for the broker from the website username"""
+        return username.split('@')[0]
 
     @staticmethod
     def publishData(data_payload, address):
@@ -61,8 +66,29 @@ class DataBrokerProxy:
         # TODO get a result to know if the message is succesfully sent or not
 
     @staticmethod
-    def _manage_broker(command) -> int:
-        return os.system(f"{settings.BROKER_MANAGER_SCRIPT} {settings.BROKER_MANAGER_URL} " + command)
+    def _manage_broker(command):
+        """"
+        Execute a given command with the broker manager script
+         - command : the command to execute and the parameters
+        """
+        success = os.system(f"{settings.BROKER_MANAGER_SCRIPT} {settings.BROKER_MANAGER_URL} " + command) == 0
+
+        if not success:
+            logger.error(f"Command {command} failed")
+            raise BrokerRequestError
+
+    @staticmethod
+    def isBrokerStarted() -> bool:
+        """
+        Check if the broker is started
+         - return : True if the broker is started
+        """
+        try:
+            DataBrokerProxy._manage_broker("status")
+        except BrokerRequestError:
+            return False
+
+        return True
 
     @staticmethod
     def createUser(user_name, password, queue_prefix):
@@ -75,23 +101,29 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Creating user {user_name} in the broker...")
-        result_code = DataBrokerProxy._manage_broker(f"add-user {user_name} {password} {queue_prefix}")
-
-        if result_code != 0:
-            logger.error("Failed to create user {user_name}")
+        DataBrokerProxy._manage_broker(f"add-user {user_name} {password} {queue_prefix}")
 
     @staticmethod
-    def deleteUser(user_name):
+    def updateUserPassword(user_name, password) -> bool:
+        """
+        Update the password of an user in the broker
+         - user_name : username 
+         - password : password
+        """
+
+        logger.info(f"Updating password of user {user_name} in the broker...")
+        DataBrokerProxy._manage_broker(f"update-user-password {user_name} {password}")
+
+    @staticmethod
+    def deleteUser(user_name, queue_prefix) -> bool:
         """
         Delete a user in the broker
-         - user_name : username 
+         - user_name : username
+         - queue_prefix : queue prefix used to remove the user access. 
         """
 
         logger.info(f"Deleting user {user_name} in the broker...")
-        result_code = DataBrokerProxy._manage_broker(f"remove-user {user_name}")
-
-        if result_code != 0:
-            logger.error(f"Failed to delete user {user_name}")
+        DataBrokerProxy._manage_broker(f"rm-user {user_name} {queue_prefix}")
 
     @staticmethod
     def createQueue(name):
@@ -101,14 +133,11 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Creating queue {name}...")
-        result_code = DataBrokerProxy._manage_broker(f"create-queue {name}")
+        DataBrokerProxy._manage_broker(f"create-queue {name}")
 
-        if result_code != 0:
-            logger.error("Failed to create queue {name}")
-        else:
-            # create the access to the queue in the amqps client
-            DataBrokerProxy.__amqps_client.create_endpoint(name)
-        
+        # create the access to the queue in the amqps client
+        DataBrokerProxy.__amqps_client.create_endpoint(name)
+
     @staticmethod
     def deleteQueue(name):
         """
@@ -117,10 +146,7 @@ class DataBrokerProxy:
         """
 
         logger.info(f"Deleting queue {name}...")
-        result_code = DataBrokerProxy._manage_broker(f"delete-queue {name}")
+        DataBrokerProxy._manage_broker(f"delete-queue {name}")
 
-        if result_code != 0:
-            logger.error(f"Failed to delete queue {name}")
-        else:
-            # remove the access to the queue in the amqps client
-            DataBrokerProxy.__amqps_client.remove_endpoint(name)
+        # remove the access to the queue in the amqps client
+        DataBrokerProxy.__amqps_client.remove_endpoint(name)

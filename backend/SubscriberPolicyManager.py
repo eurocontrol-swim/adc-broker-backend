@@ -10,6 +10,11 @@ logger = logging.getLogger('adc')
 
 def addPolicy(user_data, request_data) -> int:
     """Add a subscriber policy in the database"""
+
+    if not DataBrokerProxy.isBrokerStarted():
+        logger.error("Cannot create subscriber policy, the AMQP broker is not started")
+        return 0
+
     policy_id = request_data['policy_id']
     transformations = request_data['transformations']
     # delivery_end_point=request_data['delivery_end_point'],
@@ -77,6 +82,11 @@ def updatePolicy(user_data, request_data) -> int:
 
 def deletePolicy(user_data, request_data) -> None:
     """Delete a subscriber policy from the database"""
+
+    if not DataBrokerProxy.isBrokerStarted():
+        logger.error("Cannot delete subscriber policy, the AMQP broker is not started")
+        return 0
+
     # Match policy with user
     policy_id = request_data['policy_id']
     subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=policy_id, user_id=user_data.id)

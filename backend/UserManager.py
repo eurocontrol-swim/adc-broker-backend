@@ -8,7 +8,12 @@ from rest_framework.authtoken.models import Token
 logger = logging.getLogger('adc')
 
 def addUser(request_data):
-    """Add user in the database"""
+    """Add user in the database and in the broker"""
+    if not DataBrokerProxy.isBrokerStarted():
+        logger.error("Cannot create user, the AMQP broker is not started")
+        # TODO Add an exception and catch it in the calling method to return a http error 
+        return
+
     try:
         organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
         organization_id = None
@@ -56,13 +61,16 @@ def addUser(request_data):
         if new_user_info.user_role == 'subscriber':
             # create user in the broker
             queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.username)
-            broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.first_name, new_user.last_name)
-            # TODO handle password
-            DataBrokerProxy.createUser(broker_user_name, broker_user_name, queue_prefix)
+            broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.username)
+            DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
 
 
 def updateUser(request_data):
-    """Update a user in the database"""
+    """Update a user in the database and in the broker"""
+    if not DataBrokerProxy.isBrokerStarted():
+        logger.error("Cannot update user, the AMQP broker is not started")
+        return
+
     try:
         organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
         organization_id = None
@@ -98,10 +106,33 @@ def updateUser(request_data):
             if request_data['password'] is not None:
                 user.set_password(request_data['password'])
             user.save()
+
             user_info = USER_INFO.objects.get(user_id=user.id)
+            previous_role = user_info.user_role
             user_info.__dict__.update(user_role=request_data['role'], user_organization_id=organization_id)
             user_info.save()
             logger.info("User updated")
+
+            # modifying the user in the broker
+            if user_info.user_role == 'subscriber':
+                broker_user_name = DataBrokerProxy.generateBrokerUsername(user.username)
+                # create the user if it was not a subscriber
+                if previous_role != 'subscriber':
+                    # create user in the broker
+                    queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user.username)
+                    DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
+
+                # else we just need to update the password
+                else:
+                    # update the password of the user in the broker
+                    DataBrokerProxy.updateUserPassword(broker_user_name, request_data['password'])
+
+            # if we changed from subscriber to other, we delete the user in the broker
+            elif previous_role == 'subscriber':
+                # delete user in the broker
+                broker_user_name = DataBrokerProxy.generateBrokerUsername(user.username)
+                queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user.username)
+                DataBrokerProxy.deleteUser(broker_user_name, queue_prefix)
 
     except User.DoesNotExist:
         logger.info("User does not exist")
@@ -127,15 +158,22 @@ def getuserList():
     return user_list
 
 def deleteUser(user_data):
-    """Delete user"""
+    """Delete user in the database and the broker"""
+    if not DataBrokerProxy.isBrokerStarted():
+        logger.error("Cannot delete user, the AMQP broker is not started")
+        return
+
     # TODO - Math user authorization if role is 'administrator'
     # try:
     #     user = User.objects.get(email=ruser_data['user_email'], role='administration')
     
-    if USER_INFO.objects.get(user_id=user_data.id).user_role == 'subscriber':
+    user_info = USER_INFO.objects.get(user_id=user_data.id)
+
+    if user_info.user_role == 'subscriber':
         # delete user in the broker
-        broker_user_name = DataBrokerProxy.generateBrokerUsername(user_data.first_name, user_data.last_name)
-        DataBrokerProxy.deleteUser(broker_user_name)
+        broker_user_name = DataBrokerProxy.generateBrokerUsername(user_data.username)
+        queue_prefix = DataBrokerProxy.generateQueuePrefix(user_info.user_organization.id, user_data.username)
+        DataBrokerProxy.deleteUser(broker_user_name, queue_prefix)
 
     user_data.delete()
     logger.info("The user is deleted")
