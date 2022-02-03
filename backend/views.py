@@ -105,14 +105,13 @@ def postPublisherPolicy(request):
                 publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'])
                 policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
                 SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                response = {'message':'Publisher policy created'}
+                response = {'message':'Publisher policy updated'}
 
             except PUBLISHER_POLICY.DoesNotExist:
                 policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
-
                 if policy_id != 0:
                     SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                    response = {'message':'Publisher policy updated'}
+                    response = {'message':'Publisher policy created'}
                 else:
                     response = {'message':'Failed to create the publisher policy'}
             
@@ -224,11 +223,11 @@ def postSubscriberPolicy(request):
             try:
                 publisher_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
                 policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
-                response = {'message':'Subscriber policy created'}
+                response = {'message':'Subscriber policy updated'}
 
             except SUBSCRIBER_POLICY.DoesNotExist:
                 policy_id = SubscriberPolicyManager.addPolicy(user_data, request.data)
-                response = {'message':'Subscriber policy updated'}
+                response = {'message':'Subscriber policy created'}
             
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
@@ -302,7 +301,7 @@ def publishMessage(request):
         
         try:
             # TODO We need to update the static routes at the start of the application
-            SubscriberPolicyManager.updateStaticRouting()
+            # SubscriberPolicyManager.updateStaticRouting()
             
             # Check if the user who sent this request have access to the policy
             user_id = request.user.id
@@ -313,19 +312,29 @@ def publishMessage(request):
                 # TODO Add an error response when the policy is not found
                 for policy in user_policies:
                     if policy['id'] == policy_id:
-                        message_body = request.data['message']
+                        # If payload is a FILE
+                        if request.FILES.get('message'):
+                            # Decode this file to string
+                            message_body = request.FILES.get('message').read()
+                        else:
+                            message_body = request.data['message']
+
+                        payload = Payload(message_body)
                         # Static routing
                         endpoints = SubscriberPolicyManager.retrieveStaticRouting(policy_id)
 
                         # Dynamic routing
-                        SubscriberPolicyManager.findDynamicRouting(PublisherPolicy.createById(policy_id), message_body, endpoints)
+                        SubscriberPolicyManager.findDynamicRoutingForPublisherPolicy(PublisherPolicy.createById(policy_id), payload, endpoints)
 
                         if endpoints and endpoints != None:
-                            for endpoint in endpoints:
-                                DataBrokerProxy.publishData(message_body, endpoint.subscriber_policy.getEndPointAddress())
+                            for endpoint in endpoints:     
+                                copy_payload = Payload(payload.body)
+                                if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):                                    
+                                    # Publish data with payload
+                                    DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
                         else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
-                            return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
+                            # return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
 
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')

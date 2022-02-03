@@ -1,13 +1,12 @@
 import logging
 from django.contrib.auth.models import User
 from unidecode import unidecode
-from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT
+from .models import SUBSCRIBER_POLICY, PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT, POLICY_ASSOCIATION
 from backend.Policy import *
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
 from backend.DataBrokerProxy import *
 
 logger = logging.getLogger('adc')
-_static_routes = {}
 
 def addPolicy(user_data, request_data) -> int:
     """Add a subscriber policy in the database"""
@@ -58,10 +57,14 @@ def updatePolicy(user_data, request_data) -> int:
     transformations = request_data['transformations']
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
 
-    subscriber_policy_data = SUBSCRIBER_POLICY.objects.get(id=policy_id)
-    subscriber_policy_data.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    subscriber_policy_data = SUBSCRIBER_POLICY.objects.filter(id=policy_id)
+    subscriber_policy_data.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    # Delete old transformations items
     transformation_item = TRANSFORMATION_ITEM.objects.filter(subscriber_policy_id = policy_id)
     transformation_item.delete()
+    # Delete old associations items
+    association_item = POLICY_ASSOCIATION.objects.filter(subscriber_policy_id = policy_id)
+    association_item.delete()
 
     logger.info(f"Updating subscriber policy {policy_id}")
 
@@ -179,13 +182,22 @@ def findStaticRouting(publisher_policy, subscriber_policies = None):
     else:
         logger.info(f"No static endpoint found for policy {str(publisher_policy.getId())}")
     
-    _static_routes[publisher_policy.getId()] = endpoints
+    for endpoint in endpoints:
+        p_policy = PUBLISHER_POLICY.objects.get(id=publisher_policy.getId())
+        s_policy = SUBSCRIBER_POLICY.objects.get(id=endpoint.subscriber_policy.getId())
+        try:
+            policy_association = POLICY_ASSOCIATION.objects.get(publisher_policy=p_policy, subscriber_policy=s_policy)
+            logger.info('POLICY_ASSOCIATION ALREADY EXIST')
+            logger.info(policy_association)
+        except POLICY_ASSOCIATION.DoesNotExist:
+            static_routes = POLICY_ASSOCIATION.objects.create(publisher_policy=p_policy, subscriber_policy=s_policy)
+            static_routes.save()
 
 def removeStaticRoute(publisher_policy_id):
-    """Remove a static route"""
+    """Remove a static route from POLICY_ASSOCIATION"""
 
-    if publisher_policy_id in _static_routes:
-        _static_routes.pop(publisher_policy_id)
+    static_routes = POLICY_ASSOCIATION.objects.filter(publisher_policy_id=publisher_policy_id)
+    static_routes.delete()
 
 def updateStaticRouting():
     """Update the routes for all the publishers"""
@@ -205,9 +217,16 @@ def updateStaticRouting():
         findStaticRouting(policy, subscriber_policies)
 
 def retrieveStaticRouting(publisher_policy_id):
-    return _static_routes.get(publisher_policy_id)
+    """Static endpoint retrieval"""
+    static_routes = POLICY_ASSOCIATION.objects.filter(publisher_policy_id=publisher_policy_id)
+    endpoints = []
+    for static_route in static_routes:
+        subscriber_policy = getPolicyById(static_route.subscriber_policy_id)
+        endpoints.append(Endpoint(subscriber_policy))
 
-def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies = None):
+    return endpoints
+
+def findDynamicRoutingForPublisherPolicy(publisher_policy, payload, endpoints, subscriber_policies = None):
     """Find all the dynamic endpoints for a publisher policy and store the result"""
 
     logger.info(f"Searching dynamic routing for publisher policy: {str(publisher_policy.getId())}")
@@ -230,22 +249,6 @@ def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies
 
     to_remove.clear()
 
-    # find all the endpoints who have an uncompatible restriction with the publisher_policy
-    logger.debug("Search endpoints who have an uncompatible restriction with the publisher_policy")
-    for endpoint in endpoints:
-        logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
-        endpoint.subscriber_policy.processPayload(payload)
-        for transformation in endpoint.subscriber_policy.transformations:
-            logger.debug(f"Transformation : {transformation.data.id}")
-            if(not transformation.isStatic() and
-               not transformation.checkRestriction(publisher_policy)):
-                to_remove.append(endpoint)
-                break
-
-    # we remove them is a second time to avoid the modification of the list during the iteration
-    for endpoint in to_remove:
-        endpoints.remove(endpoint)
-
     if len(endpoints) > 0:
         logger.info(f"Dynamic endpoints found for policy {str(publisher_policy.getId())} :")
 
@@ -254,12 +257,30 @@ def findDynamicRouting(publisher_policy, payload, endpoints, subscriber_policies
     else:
         logger.info(f"No dynamic endpoint found for policy {str(publisher_policy.getId())}")
 
+def findDynamicRoutingWithPayload(publisher_policy, payload, endpoint):
+    """Search endpoints who have an uncompatible restriction with the publisher_policy from Payload message"""
+    logger.debug("Search dynamic endpoints who have an uncompatible restriction with the publisher_policy")
+    logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
+
+    check_payload = endpoint.subscriber_policy.processPayload(payload)
+    
+    for transformation in endpoint.subscriber_policy.transformations:
+        logger.debug(f"Transformation : {transformation.data.id}")
+        if(not transformation.isStatic() and
+            not transformation.checkRestriction(publisher_policy)):
+            to_remove.append(endpoint)
+            return False
+    
+    return check_payload
+
 def getPolicyByUser(user_id):
-    """Get subscriber policy by User id"""
+    """Get the subscriber policy objects by User id"""
     policy = SUBSCRIBER_POLICY.objects.get(user_id=user_id)
+    policy = SubscriberPolicy(policy)
     return policy
 
 def getPolicyById(policy_id):
-    """Get subscriber policy by id"""
+    """Get the subscriber policy objects by id"""
     policy = SUBSCRIBER_POLICY.objects.get(id=policy_id)
+    policy = SubscriberPolicy(policy)
     return policy

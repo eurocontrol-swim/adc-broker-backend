@@ -1,5 +1,5 @@
 import logging
-from .models import PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT
+from .models import PUBLISHER_POLICY, TRANSFORMATION_ITEM, DATA_CATALOGUE_ELEMENT, POLICY_ASSOCIATION
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
 from backend.Policy import *
 
@@ -21,6 +21,8 @@ def addPolicy(user_data, request_data) -> int:
         new_transformation_item = TRANSFORMATION_ITEM.objects.create(item_order=index, publisher_policy_id=policy_id, json_path=item['json_path'], item_type=item['item_type'], item_operator=item['item_operator'], organization_name=item['organization_name'], organization_type=item['organization_type'])
         new_transformation_item.save()
 
+    SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+
     return policy_id
 
 def updatePolicy(user_data, request_data) -> int:
@@ -29,10 +31,14 @@ def updatePolicy(user_data, request_data) -> int:
     transformations = request_data['transformations']
     catalogue_element = DATA_CATALOGUE_ELEMENT.objects.get(id=str(request_data['catalogue_id']))
 
-    publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id)
-    publisher_policy.__dict__.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    publisher_policy = PUBLISHER_POLICY.objects.filter(id=policy_id)
+    publisher_policy.update(user_id=user_data.id, policy_type=request_data['policy_type'], catalogue_element_id=catalogue_element.id)
+    # Delete old transformations items
     transformation_item = TRANSFORMATION_ITEM.objects.filter(publisher_policy_id = policy_id)
     transformation_item.delete()
+    # Delete old associations items
+    association_item = POLICY_ASSOCIATION.objects.filter(publisher_policy_id = policy_id)
+    association_item.delete()
 
     logger.info("Updating publisher policy %s" % policy_id)
 

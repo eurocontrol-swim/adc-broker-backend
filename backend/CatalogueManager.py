@@ -8,14 +8,14 @@ logger = logging.getLogger('adc')
 
 def addCatalogueElement(request_data):
     """Add catalogue element in the database"""
-    new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request_data['type'], data_path=request_data['path'], data_schema=request_data['schema'])
+    new_data_element = DATA_CATALOGUE_ELEMENT.objects.create(data_type=request_data['type'], data_path=request_data['path'])
     new_data_element.save()
     logger.info('Data saved')
 
 def updateCatalogueElement(request_data):
     """Update catalogue element in the database"""
     data_element = DATA_CATALOGUE_ELEMENT.objects.get(id=request_data['id'])
-    data_element.__dict__.update(data_type=request_data['type'], data_path=request_data['path'], data_schema=request_data['schema'])
+    data_element.__dict__.update(data_type=request_data['type'], data_path=request_data['path'])
     data_element.save()
     logger.info('Data updated')
 
