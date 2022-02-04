@@ -30,8 +30,8 @@
       "model": "backend.organizations",
       "pk": 1,
       "fields": { 
-        "name": "",
-        "type": ""
+        "name": "EuroControl",
+        "type": "administrator"
       }
     }
 ]
