@@ -106,15 +106,14 @@ def getUsers(request):
 def deleteUser(request):
     """View function to delete user and informations"""
     if request.method == "DELETE":
-        # TODO - Math user authorization if role is 'administrator'
-        # try:
-        #     user = User.objects.get(email=request.data['user_email'], role='administration')
+        # Math user authorization if role is 'administrator'
         try:
-            user = User.objects.get(email=request.data['user_email'])
-            UserManager.deleteUser(user)
-
-            return JsonResponse({'message':'The user is deleted'})
-
+            user_data = User.objects.get(email=request.data['user_email'])
+            if UserManager.checkUserRole(user_data.id, 'administrator'):
+                UserManager.deleteUser(user_data)
+                return JsonResponse({'message':'The user is deleted'})
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user does not have the ADMINISTRATOR role')
         except User.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST, data='User does not exist')
         

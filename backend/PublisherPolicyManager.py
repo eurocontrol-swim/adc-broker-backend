@@ -52,16 +52,18 @@ def updatePolicy(user_data, request_data) -> int:
 
     return policy_id
 
-def deletePolicy(user_data, request_data):
+def deletePolicy(user_data, request_data) -> bool:
     """Delete a publisher policy from the database"""
     policy_id = request_data['policy_id']
     # Match policy with user
-    publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id, user_id=user_data.id)
-    publisher_policy.delete()
-
-    SubscriberPolicyManager.removeStaticRoute(policy_id)
-
-    logger.info("Deleting publisher policy %s" % policy_id)
+    publisher_policy = PUBLISHER_POLICY.objects.get(id=policy_id)
+    if publisher_policy.user_id == user_data.id:
+        publisher_policy.delete()
+        SubscriberPolicyManager.removeStaticRoute(policy_id)
+        logger.info("Deleting publisher policy %s" % policy_id)
+        return True
+    else:
+        return False
 
 def getPolicyByUser(user_id):
     """Get publisher policies id by User id"""

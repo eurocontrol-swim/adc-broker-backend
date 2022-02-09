@@ -17,6 +17,7 @@ from unidecode import unidecode
 import backend.PublisherPolicyManager as PublisherPolicyManager
 import backend.SubscriberPolicyManager as SubscriberPolicyManager
 import backend.CatalogueManager as CatalogueManager
+import backend.UserManager as UserManager
 from backend.DataBrokerProxy import *
 from backend.views_user import getUser
 from backend.Policy import *
@@ -47,13 +48,21 @@ def postDataCatalogue(request):
     """View function for create or update data catalogue element"""
     if request.method == "POST":
         try:
-            # Check if data element already exist
-            data_element = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['id'])
-            CatalogueManager.updateCatalogueElement(request.data)
-            return JsonResponse({'message':'Data updated'})
-        except DATA_CATALOGUE_ELEMENT.DoesNotExist:
-            CatalogueManager.addCatalogueElement(request.data)
-            return JsonResponse({'message':'Data saved'})
+            # Math user authorization if role is 'administrator'
+            user_data = User.objects.get(email=request.data['user_email'])
+            if UserManager.checkUserRole(user_data.id, 'administrator'):
+                try:
+                    # Check if data element already exist
+                    data_element = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['id'])
+                    CatalogueManager.updateCatalogueElement(request.data)
+                    return JsonResponse({'message':'Data updated'})
+                except DATA_CATALOGUE_ELEMENT.DoesNotExist:
+                    CatalogueManager.addCatalogueElement(request.data)
+                    return JsonResponse({'message':'Data saved'})
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user does not have the ADMINISTRATOR role')
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='The user does not exist')
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
@@ -63,13 +72,23 @@ def getDataCatalogue(request):
     """View function to get all data catalogue elements"""
     if request.method == "GET":
         policy_type = request.GET.get('policy_type', '')
-        if policy_type != '':
-            # Filter Data Catalogue Element if data_type contains 'type' or 'data' string
-            data_catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(data_type__contains=policy_type.split('_')[0]).values()
-        else:
-            # Get all data catalogue elements from database
-            data_catalogue = CatalogueManager.getCatalogueElementList()
-        return JsonResponse({'data':list(data_catalogue)})
+        user_email = request.GET.get('email', '')
+        try:
+            # Math user authorization if role is 'administrator'
+            user_data = User.objects.get(email=user_email)
+            # TODO - Check user role ??
+            # if UserManager.checkUserRole(user_data.id, 'administrator'):
+            if policy_type != '':
+                # Filter Data Catalogue Element if data_type contains 'type' or 'data' string
+                data_catalogue = DATA_CATALOGUE_ELEMENT.objects.filter(data_type__contains=policy_type.split('_')[0]).values()
+            else:
+                # Get all data catalogue elements from database
+                data_catalogue = CatalogueManager.getCatalogueElementList()
+            return JsonResponse({'data':list(data_catalogue)})
+            # else:
+            #     return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user does not have the ADMINISTRATOR role')
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='The user does not exist')
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not GET')
 
@@ -78,16 +97,21 @@ def getDataCatalogue(request):
 def deleteDataElement(request):
     """View function to delete user and informations"""
     if request.method == "DELETE":
-        # TODO - Math user authorization if role is 'administrator'
-        # try:
-        #     user = User.objects.get(email=request.data['user_email'], role='administration')
         try:
-            data = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['data_id'])
-            data.delete()
-            return JsonResponse({'message':'The data element is deleted'})
+            # Math user authorization if role is 'administrator'
+            user_data = User.objects.get(email=request.data['user_email'])
+            if UserManager.checkUserRole(user_data.id, 'administrator'):
+                try:
+                    data = DATA_CATALOGUE_ELEMENT.objects.get(id=request.data['data_id'])
+                    data.delete()
+                    return JsonResponse({'message':'The data element is deleted'})
 
-        except DATA_CATALOGUE_ELEMENT.DoesNotExist:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data='Data element does not exist')
+                except DATA_CATALOGUE_ELEMENT.DoesNotExist:
+                    return Response(status=status.HTTP_400_BAD_REQUEST, data='Data element does not exist')
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user does not have the ADMINISTRATOR role')
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='The user does not exist')
         
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not DELETE')
@@ -98,14 +122,17 @@ def postPublisherPolicy(request):
     """View function for create or update data catalogue element"""
     if request.method == "POST":
         # try if user not exist by email
-        
         try:
             user_data = User.objects.get(email=request.data['user_email'])
             try:
+                # Check if user manages only its own policies
                 publisher_policy = PUBLISHER_POLICY.objects.get(id=request.data['policy_id'])
-                policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
-                SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
-                response = {'message':'Publisher policy updated'}
+                if publisher_policy.user_id == user_data.id:
+                    policy_id = PublisherPolicyManager.updatePolicy(user_data, request.data)
+                    SubscriberPolicyManager.findStaticRouting(PublisherPolicy.createById(policy_id))
+                    response = {'message':'Publisher policy updated'}
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user is not authorized')
 
             except PUBLISHER_POLICY.DoesNotExist:
                 policy_id = PublisherPolicyManager.addPolicy(user_data, request.data)
@@ -116,7 +143,7 @@ def postPublisherPolicy(request):
                     response = {'message':'Failed to create the publisher policy'}
             
         except User.DoesNotExist:
-            response = {'message':'User does not exist'}
+            return Response(status=status.HTTP_400_BAD_REQUEST, data='The user does not exist')
 
         return JsonResponse(response)
     else:
@@ -131,6 +158,7 @@ def getPublisherPolicy(request):
         try:
             user = User.objects.get(email=request.GET.get('user_mail', ''))
             publisher_policies_list = []
+            # Check if user manages only its own policies
             # Get all data catalogue elements from database that match with the user
             publisher_policies = PUBLISHER_POLICY.objects.filter(user_id = user.id).values()
             for policy in publisher_policies:
@@ -147,7 +175,6 @@ def getPublisherPolicy(request):
                 publisher_policies_list.append({'policy':policy, 'catalogue':list(catalogue), 'transformations':list(transformation)})
             
             response = {'policies':publisher_policies_list}
-            
         except User.DoesNotExist:
             response = {'message':'User does not exist'}
         
@@ -164,9 +191,11 @@ def deletePublisherPolicy(request):
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
-                PublisherPolicyManager.deletePolicy(user, request.data)
-
-                return JsonResponse({'message':'The publisher policy is deleted'})
+                # Check if user manages only its own policies
+                if PublisherPolicyManager.deletePolicy(user, request.data):
+                    return JsonResponse({'message':'The publisher policy is deleted'})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user is not authorized')
 
             except PUBLISHER_POLICY.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data='Publisher policy does not exist')
@@ -221,9 +250,12 @@ def postSubscriberPolicy(request):
             user_data = User.objects.get(email=request.data['user_email'])
 
             try:
-                publisher_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
-                policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
-                response = {'message':'Subscriber policy updated'}
+                subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=request.data['policy_id'])
+                if subscriber_policy.user_id == user_data.id:
+                    policy_id = SubscriberPolicyManager.updatePolicy(user_data, request.data)
+                    response = {'message':'Subscriber policy updated'}
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user is not authorized')
 
             except SUBSCRIBER_POLICY.DoesNotExist:
                 policy_id = SubscriberPolicyManager.addPolicy(user_data, request.data)
@@ -245,6 +277,7 @@ def getSubscriberPolicy(request):
         try:
             user = User.objects.get(email=request.GET.get('user_mail', ''))
             subscriber_policies_list = []
+            # Check if user manages only its own policies
             # Get all data catalogue elements from database that match with the user
             subscriber_policies = SUBSCRIBER_POLICY.objects.filter(user_id = user.id).values()
             for policy in subscriber_policies:
@@ -277,9 +310,11 @@ def deleteSubscriberPolicy(request):
         try:
             user = User.objects.get(email=request.data['user_email'])
             try:
-                SubscriberPolicyManager.deletePolicy(user, request.data)
-
-                return JsonResponse({'message':'The subscriber policy is deleted'})
+                # Check if user manages only its own policies
+                if SubscriberPolicyManager.deletePolicy(user, request.data):
+                    return JsonResponse({'message':'The subscriber policy is deleted'})
+                else:
+                    return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user is not authorized')
 
             except SUBSCRIBER_POLICY.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data='Subscriber policy does not exist')
@@ -297,8 +332,6 @@ def deleteSubscriberPolicy(request):
 @permission_classes([IsAuthenticated])
 def publishMessage(request):
     if request.method == "POST":
-        logger.info("Publish message")
-        
         try:
             # TODO We need to update the static routes at the start of the application
             # SubscriberPolicyManager.updateStaticRouting()
@@ -309,7 +342,6 @@ def publishMessage(request):
             user_policies = PublisherPolicyManager.getPolicyByUser(user_id)
 
             if len(user_policies) > 0:
-                # TODO Add an error response when the policy is not found
                 for policy in user_policies:
                     if policy['id'] == policy_id:
                         # If payload is a FILE
@@ -334,17 +366,17 @@ def publishMessage(request):
                                     DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
                         else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
-                            # return JsonResponse({'message':f'No endpoint found for policy {policy_id}'})
+                            return Response(status=status.HTTP_404_NOT_FOUND, data=f'The Publisher Policy {policy_id} does not generate any routing for the message')
+                    else:
+                        return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
 
+                    return Response('Your message is published')
             else:
-                return Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
+                return Response(status=status.HTTP_400_BAD_REQUEST, data=f'The Publisher has no policies available')
             
         except any:
-            # TODO handle exceptions and returns better.
-            logger.error("woops")
-            return JsonResponse({'message':'unknown error occured'})
-
-        return JsonResponse({'message':'Your message is published'})
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=f'The Publisher policy {policy_id} does not exist')
+        
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
