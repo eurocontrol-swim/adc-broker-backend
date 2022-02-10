@@ -80,7 +80,7 @@ def updatePolicy(user_data, request_data) -> int:
 
     return policy_id
 
-def deletePolicy(user_data, request_data) -> None:
+def deletePolicy(user_data, request_data) -> bool:
     """Delete a subscriber policy from the database"""
 
     if not DataBrokerProxy.isBrokerStarted():
@@ -90,19 +90,23 @@ def deletePolicy(user_data, request_data) -> None:
     # Match policy with user
     policy_id = request_data['policy_id']
     subscriber_policy = SUBSCRIBER_POLICY.objects.get(id=policy_id, user_id=user_data.id)
-    subscriber_policy.delete()
+    if subscriber_policy.user_id == user_data.id:
+        subscriber_policy.delete()
 
-    logger.info(f"Deleting subscriber policy {policy_id}")
+        logger.info(f"Deleting subscriber policy {policy_id}")
 
-    adc_user = ADCUser(user_data)
+        adc_user = ADCUser(user_data)
 
-    # delete the corresponding queue in the broker
-    queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.username)
-    queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
-    DataBrokerProxy.deleteQueue(queue_name)
+        # delete the corresponding queue in the broker
+        queue_prefix = DataBrokerProxy.generateQueuePrefix(adc_user.getOrganizationId(), user_data.username)
+        queue_name = DataBrokerProxy.generateQueueName(queue_prefix, policy_id)
+        DataBrokerProxy.deleteQueue(queue_name)
 
-    # when a subscriber is deleted all the publisher may have their endpoints modified so we update all the routes
-    SubscriberPolicyManager.updateStaticRouting()
+        # when a subscriber is deleted all the publisher may have their endpoints modified so we update all the routes
+        SubscriberPolicyManager.updateStaticRouting()
+        return True
+    else:
+        return False
 
 def getAllPolicies():
     """Get all the subscriber policies objects"""

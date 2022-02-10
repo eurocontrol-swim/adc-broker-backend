@@ -162,10 +162,6 @@ def deleteUser(user_data):
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot delete user, the AMQP broker is not started")
         return
-
-    # TODO - Math user authorization if role is 'administrator'
-    # try:
-    #     user = User.objects.get(email=ruser_data['user_email'], role='administration')
     
     user_info = USER_INFO.objects.get(user_id=user_data.id)
 
@@ -177,3 +173,16 @@ def deleteUser(user_data):
 
     user_data.delete()
     logger.info("The user is deleted")
+
+def checkUserRole(user_id, role_expected) -> bool:
+    """Check if user has this role expected"""
+    try:
+        user_role = USER_INFO.objects.get(user_id=user_id).user_role
+        if user_role == role_expected:
+            return True
+        else:
+            return False
+
+    except USER_INFO.DoesNotExist:
+        return False
+    
