@@ -71,7 +71,7 @@ def postUser(request):
         if request.data['id'] is not None:
             # try if user exist by email
             try:
-                user = User.objects.get(id=request.data['id'])
+                user = User.objects.get(id=request.data['email'])
                 # Check if another user already has this username
                 already_username = User.objects.filter(username=request.data['email']).exclude(id=request.data['id'])
                 if already_username:
