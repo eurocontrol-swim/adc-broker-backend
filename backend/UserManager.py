@@ -37,7 +37,7 @@ def addUser(request_data):
     user_email = request_data['email']
     # try if user exist by email
     try:
-        user = User.objects.get(id=request_data['id'])
+        user = User.objects.get(email=user_email)
         logger.info("User already exist")
 
     except User.DoesNotExist:
