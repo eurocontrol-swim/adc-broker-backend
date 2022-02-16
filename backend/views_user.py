@@ -14,7 +14,6 @@ from rest_framework.response import Response
 from adc_backend.settings import REDIRECT_URL
 from django.contrib.auth import authenticate, login, logout
 from .models import USER_INFO, ORGANIZATIONS
-from rest_framework import status
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.urls import reverse_lazy
@@ -71,23 +70,31 @@ def postUser(request):
         if request.data['id'] is not None:
             # try if user exist by email
             try:
-                user = User.objects.get(id=request.data['email'])
+                user = User.objects.get(email=request.data['email'])
                 # Check if another user already has this username
                 already_username = User.objects.filter(username=request.data['email']).exclude(id=request.data['id'])
                 if already_username:
                     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Another user already has this username')
                 else:
-                    UserManager.updateUser(request.data)
-                    response = {'message':'User updated'}
+                    if UserManager.updateUser(request.data):
+                        response = {'message':'User updated'}
+                        return JsonResponse(response)
+                    else:
+                        return Response(status=status.HTTP_400_BAD_REQUEST, data='User does not exist')
 
             except User.DoesNotExist:
-                UserManager.addUser(request.data)
-                response = {'message':'User created'}
+                if UserManager.addUser(request.data):
+                    response = {'message':'User created'}
+                    return JsonResponse(response)
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST, data='User already exist')
         else:
-            UserManager.addUser(request.data)
-            response = {'message':'User created'}
+            if UserManager.addUser(request.data):
+                response = {'message':'User created'}
+                return JsonResponse(response)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data='User already exist')
 
-        return JsonResponse(response)
     else:
         return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data='Request method is not POST')
 
