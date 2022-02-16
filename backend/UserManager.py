@@ -7,12 +7,12 @@ from rest_framework.authtoken.models import Token
 
 logger = logging.getLogger('adc')
 
-def addUser(request_data):
+def addUser(request_data)-> bool:
     """Add user in the database and in the broker"""
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot create user, the AMQP broker is not started")
         # TODO Add an exception and catch it in the calling method to return a http error 
-        return
+        # return False
 
     try:
         organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
@@ -39,6 +39,7 @@ def addUser(request_data):
     try:
         user = User.objects.get(email=user_email)
         logger.info("User already exist")
+        return False
 
     except User.DoesNotExist:
         # User does not exist on auth_user table
@@ -57,6 +58,7 @@ def addUser(request_data):
         new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request_data['role'], user_organization_id=organization_id)
         new_user_info.save()
         logger.info("User created")
+        return True
     
         if new_user_info.user_role == 'subscriber':
             # create user in the broker
@@ -65,11 +67,11 @@ def addUser(request_data):
             DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
 
 
-def updateUser(request_data):
+def updateUser(request_data)-> bool:
     """Update a user in the database and in the broker"""
     if not DataBrokerProxy.isBrokerStarted():
         logger.error("Cannot update user, the AMQP broker is not started")
-        return
+        # return False
 
     try:
         organizations = ORGANIZATIONS.objects.filter(name=request_data['organization_name'])
@@ -112,6 +114,7 @@ def updateUser(request_data):
             user_info.__dict__.update(user_role=request_data['role'], user_organization_id=organization_id)
             user_info.save()
             logger.info("User updated")
+            return True
 
             # modifying the user in the broker
             if user_info.user_role == 'subscriber':
@@ -136,6 +139,7 @@ def updateUser(request_data):
 
     except User.DoesNotExist:
         logger.info("User does not exist")
+        return False
 
 def getuserList():
     """Retrieve the whole user list"""
