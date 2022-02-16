@@ -1,6 +1,6 @@
 #!/bin/sh
 
-url='http://localhost'
+url='https://localhost'
 username=''
 password=''
 policy=''
@@ -91,7 +91,7 @@ then
     exit 1
 fi
 
-request_result=$(curl --no-progress-meter --location --request POST ${url}'/api/token/' --form 'username="'${username}'"' --form 'password="'${password}'"')
+request_result=$(curl --insecure --no-progress-meter --location --request POST ${url}'/api/token/' --form 'username="'${username}'"' --form 'password="'${password}'"')
 [ $? == 0 ] || exit 1
 
 token=$(echo $request_result | grep -o -E '"token":".*"' | cut -f2 -d: | sed 's/"//g')
@@ -102,7 +102,8 @@ then
     exit 1
 fi
 
-curl --location --request POST ${url}'/api/publish/' --header "Authorization: Token $token" --form 'policy_id="'$policy'"' --form "message=\"$message\""
+# --insecure : No check certificate because it's self signed
+curl --insecure --location --request POST ${url}'/api/publish/' --header "Authorization: Token $token" --form 'policy_id="'$policy'"' --form "message=\"$message\""
 echo
 
 
