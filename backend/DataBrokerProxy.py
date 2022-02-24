@@ -53,7 +53,7 @@ class DataBrokerProxy:
     @staticmethod
     def generateBrokerUsername(username):
         """Generate the username for the broker from the website username"""
-        return username
+        return username.split('@')[0]
 
     @staticmethod
     def publishData(data_payload, address):
