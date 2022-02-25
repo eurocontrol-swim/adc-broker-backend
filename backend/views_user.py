@@ -115,9 +115,10 @@ def deleteUser(request):
     if request.method == "DELETE":
         # Math user authorization if role is 'administrator'
         try:
-            user_data = User.objects.get(email=request.data['user_email'])
-            if UserManager.checkUserRole(user_data.id, 'administrator'):
-                UserManager.deleteUser(user_data)
+            user_admin = User.objects.get(email=request.data['user'])
+            user_to_delete = User.objects.get(email=request.data['email'])
+            if UserManager.checkUserRole(user_admin.id, 'administrator'):
+                UserManager.deleteUser(user_to_delete)
                 return JsonResponse({'message':'The user is deleted'})
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED, data='The user does not have the ADMINISTRATOR role')
