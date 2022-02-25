@@ -58,14 +58,15 @@ def addUser(request_data)-> bool:
         new_user_info = USER_INFO.objects.create(user_id = new_user.id, user_role=request_data['role'], user_organization_id=organization_id)
         new_user_info.save()
         logger.info("User created")
-        return True
+        
     
         if new_user_info.user_role == 'subscriber':
             # create user in the broker
             queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, new_user.username)
             broker_user_name = DataBrokerProxy.generateBrokerUsername(new_user.username)
             DataBrokerProxy.createUser(broker_user_name, request_data['password'], queue_prefix)
-
+            
+        return True
 
 def updateUser(request_data)-> bool:
     """Update a user in the database and in the broker"""
@@ -114,7 +115,7 @@ def updateUser(request_data)-> bool:
             user_info.__dict__.update(user_role=request_data['role'], user_organization_id=organization_id)
             user_info.save()
             logger.info("User updated")
-            return True
+            
 
             # modifying the user in the broker
             if user_info.user_role == 'subscriber':
@@ -136,6 +137,8 @@ def updateUser(request_data)-> bool:
                 broker_user_name = DataBrokerProxy.generateBrokerUsername(user.username)
                 queue_prefix = DataBrokerProxy.generateQueuePrefix(organization_id, user.username)
                 DataBrokerProxy.deleteUser(broker_user_name, queue_prefix)
+            
+            return True
 
     except User.DoesNotExist:
         logger.info("User does not exist")
