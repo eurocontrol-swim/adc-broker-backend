@@ -95,7 +95,7 @@ def deleteDataElement(request):
 @api_view(['POST'])
 @ensure_csrf_cookie
 def postPublisherPolicy(request):
-    """View function for create or update data catalogue element"""
+    """View function for create or update Publisher Policy"""
     if request.method == "POST":
         # try if user not exist by email
         

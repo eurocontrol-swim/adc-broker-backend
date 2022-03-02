@@ -7,9 +7,25 @@ from rest_framework_swagger.views import get_swagger_view
 from adc_backend.settings import REDIRECT_URL
 from django.contrib.auth import views as auth_views
 from rest_framework.schemas import get_schema_view
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.views import obtain_auth_token, ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 
 schema_view = get_swagger_view(title='ADC Swagger API')
+
+class CustomAuthToken(ObtainAuthToken):
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data,
+                                           context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({
+            'token': token.key,
+          #   'user_id': user.pk,
+          #   'email': user.email
+        })
 
 urlpatterns = [
     re_path(r'api/swagger/', schema_view),
@@ -23,7 +39,8 @@ urlpatterns = [
     re_path(r'api/publish/', views.publishMessage, name='publish'),
     re_path(r'api/test/', views.Test, name='Test'),
     #re_path(r'api/test/', views.TestView.as_view(), name='TestView'),
-    re_path(r'api/token/', obtain_auth_token, name='obtain_auth_token'),
+#     re_path(r'api/token/', obtain_auth_token, name='obtain_auth_token'),
+    re_path(r'api/token/', CustomAuthToken.as_view(), name='obtain_auth_token'),
 
     re_path(r'auth$', views_user.auth, name='auth'),
     re_path(r'logout$', views_user.logout_view, name='logout_view'),
