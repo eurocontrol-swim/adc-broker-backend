@@ -3,6 +3,7 @@ from django.urls import re_path
 from django.urls import path, include
 from backend import views, views_user
 from django.contrib.auth.views import LogoutView
+from django.views.generic import TemplateView
 from rest_framework_swagger.views import get_swagger_view
 from adc_backend.settings import REDIRECT_URL
 from django.contrib.auth import views as auth_views
@@ -18,6 +19,7 @@ class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data,
                                            context={'request': request})
+        
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
@@ -28,16 +30,20 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 urlpatterns = [
-    re_path(r'api/swagger/', schema_view),
+    # re_path(r'api/swagger/', schema_view),
 
-    re_path(r'api/schema/', get_schema_view(
-     title="EuroControl Aviation Data Corridor - API",
-     description="Broker API",
-     version="1.0.0"
-    ), name='schema'),
+    # re_path(r'api/schema/', get_schema_view(
+    #  title="EuroControl Aviation Data Corridor - API",
+    #  description="Broker API",
+    #  version="1.0.0"
+    # ), name='schema'),
+
+    re_path(r'api/doc', TemplateView.as_view(
+        template_name='redoc.html'
+    ), name='redoc'),
 
     re_path(r'api/publish/', views.publishMessage, name='publish'),
-    re_path(r'api/test/', views.Test, name='Test'),
+    # re_path(r'api/test/', views.Test, name='Test'),
     #re_path(r'api/test/', views.TestView.as_view(), name='TestView'),
 #     re_path(r'api/token/', obtain_auth_token, name='obtain_auth_token'),
     re_path(r'api/token/', CustomAuthToken.as_view(), name='obtain_auth_token'),
