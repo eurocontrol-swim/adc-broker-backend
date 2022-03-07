@@ -1,0 +1,223 @@
+info:
+  description: Broker API
+  title: EuroControl Aviation Data Corridor - API
+  version: '1.0'
+openapi: 3.0.0
+
+components:
+  securitySchemes:
+    UserToken:
+      type: apiKey
+      in: header
+      name: Authorization
+
+paths:
+  /auth:
+    post:
+      summary: Login user.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          description: The user to login.
+          schema:      # Request body contents
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+              password:
+                type: string
+            example:   # Sample object
+              email: admin@mail.com
+              password: admin
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok. Login user and return a user object.
+        '400':
+          description: Bad request. Login error.
+        '405':
+          description: Request method is not POST.
+        '500':
+          description: Internal Server Error.
+
+  /api/postUser:
+    post:
+      summary: Create or update user.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          description: The user to create.
+          schema:      # Request body contents
+            type: object
+            required:
+              - id
+              - firstname
+              - lastname
+              - email
+              - password
+              - role
+              - organization_name
+              - organization_type
+            properties:
+              id:
+                type: integer
+              firstname:
+                type: string
+              lastname:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              role:
+                type: string
+              organization_name:
+                type: string
+              organization_type:
+                type: string
+            example:   # Sample object
+              id: 1
+              firstname: Jhon
+              lastname: Doe
+              email: jhon.doe@mail.com
+              password: Jp@ssword
+              role: administrator
+              organization_name: easyJet
+              organization_type: airline
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok. User created.
+        '400':
+          description: Bad request. User does not exist or already exist.
+        '405':
+          description: Request method is not POST or another user already has this username.
+        '500':
+          description: Internal Server Error.
+
+  /api/postDataCatalogue:
+    post:
+      summary: Create or update data catalogue element.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          description: The data catalogue element to create.
+          schema:      # Request body contents
+            type: object
+            required:
+              - id
+              - type
+              - path
+              - email
+            properties:
+              id:
+                type: integer
+              type:
+                type: string
+              path:
+                type: string
+              email:
+                type: string
+            example:   # Sample object
+              id: 1
+              type: TOPIC
+              path: all.topics
+              email: jhon.doe@mail.com
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok. Data catalogue element created.
+        '400':
+          description: Bad request. The user does not exist.
+        '401':
+          description: Unauthorized. The user does not have the ADMINISTRATOR role.
+        '405':
+          description: Request method is not POST.
+        '500':
+          description: Internal Server Error.
+  
+  /api/token/:
+    post:
+      summary: Get user token.
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          description: The user credentials.
+          schema:      # Request body contents
+            type: object
+            required:
+              - username
+              - password
+            properties:
+              username:
+                type: string
+              password:
+                type: string
+            example:   # Sample object
+              username: jhon.doe@mail.com
+              password: Jp@ssword
+              
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok. token value.
+        '400':
+          description: Bad request. Wrong credentials.
+        '401':
+          description: Unauthorized.
+        '405':
+          description: Request method is not POST.
+        '500':
+          description: Internal Server Error.
+
+  /api/publish/:
+    post:
+      summary: Publish payload message to Publisher policy.
+      security:
+        - UserToken: [] #Authorization: 'Token ...'
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          description: The publish message.
+          schema:      # Request body contents
+            type: object
+            required:
+              - policy_id
+              - message
+            properties:
+              policy_id:
+                type: integer
+              message:
+                type: string
+            example:   # Sample object
+              policy_id: 1
+              message: Sample message
+              
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Ok. Message published.
+        '400':
+          description: Bad request. The publisher policy does not exist.
+        '401':
+          description: Unauthorized. The user is not allowed to publish here.
+        '405':
+          description: Request method is not POST.
+        '500':
+          description: Internal Server Error.
+
+servers:
+- url: https://adc-frontend/
