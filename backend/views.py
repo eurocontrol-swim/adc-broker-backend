@@ -364,14 +364,14 @@ def publishMessage(request):
                                 if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):                                    
                                     # Publish data with payload
                                     DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
-							return Response('Your message is published')
+                            return Response('Your message is published')
 						else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
                             response= Response(status=status.HTTP_404_NOT_FOUND, data=f'The Publisher Policy {policy_id} does not generate any routing for the message')
                     else:
-						response= Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
+                        response= Response(status=status.HTTP_401_UNAUTHORIZED, data='You are not allowed to publish here')
 
-                    return response
+                return response
             else:
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=f'The Publisher has no policies available')
             
