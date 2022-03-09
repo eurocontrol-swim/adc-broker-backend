@@ -7,8 +7,8 @@
           "last_login": null,
           "is_superuser": true,
           "username": "admin@mail.com",
-          "first_name": "",
-          "last_name": "",
+          "first_name": "Admin",
+          "last_name": "Admin",
           "email": "admin@mail.com",
           "is_staff": true,
           "is_active": true,
@@ -30,7 +30,7 @@
       "model": "backend.organizations",
       "pk": 1,
       "fields": { 
-        "name": "EuroControl",
+        "name": "Eurocontrol",
         "type": "administrator"
       }
     }
