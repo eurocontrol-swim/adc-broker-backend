@@ -365,7 +365,7 @@ def publishMessage(request):
                                     # Publish data with payload
                                     DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())
                             return Response('Your message is published')
-						else:
+                        else:
                             logger.info(f"No endpoint found for policy {policy_id}.")
                             response= Response(status=status.HTTP_404_NOT_FOUND, data=f'The Publisher Policy {policy_id} does not generate any routing for the message')
                     else:
