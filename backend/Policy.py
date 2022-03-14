@@ -108,11 +108,12 @@ class TransformationItem:
                 matches = jsonpath_expr.find(json_data)
 
                 if(len(matches) > 0):
+                    payload.body = []
                     for match in matches:
                         # logger.info("Extracted: " + str(match.value))
                         # self.__payload_data = match.value
                         if self.data.item_operator == "payload_extraction":
-                            payload.body = match.value
+                            payload.body.append(match.value)
                         else:
                             self.__payload_data = match.value
                     return True
