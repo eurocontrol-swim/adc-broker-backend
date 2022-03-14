@@ -1,37 +1,99 @@
 [
-    {
-        "model": "auth.user",
-        "pk": 1,
-        "fields": {
-          "password": "pbkdf2_sha256$320000$eFDB1tHZUUdssX7DxcAswr$diCi7+6OLLH+Kpb3NpkVxD2mN+oPMX9BZIF9SRWwQh8=",
-          "last_login": null,
-          "is_superuser": true,
-          "username": "admin@mail.com",
-          "first_name": "Admin",
-          "last_name": "Admin",
-          "email": "admin@mail.com",
-          "is_staff": true,
-          "is_active": true,
-          "date_joined": "2022-01-24T15:51:55.324Z",
-          "groups": [],
-          "user_permissions": []
-        }
-    },
-    {
-      "model": "backend.user_info",
-      "pk": 1,
-      "fields": {
-        "user": 1,
-        "user_organization": 1,
-        "user_role": "administrator"
-      }
-    },
-    {
-      "model": "backend.organizations",
-      "pk": 1,
-      "fields": { 
-        "name": "Eurocontrol",
-        "type": "administrator"
-      }
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$320000$eFDB1tHZUUdssX7DxcAswr$diCi7+6OLLH+Kpb3NpkVxD2mN+oPMX9BZIF9SRWwQh8=",
+      "last_login": null,
+      "is_superuser": true,
+      "username": "admin@mail.com",
+      "first_name": "Admin",
+    "last_name": "Admin",
+      "email": "admin@mail.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-01-24T15:51:55.324Z",
+      "groups": [],
+      "user_permissions": []
     }
+  },
+  {
+    "model": "backend.user_info",
+    "pk": 1,
+    "fields": {
+      "user": 1,
+      "user_organization": 1,
+      "user_role": "administrator"
+    }
+  },
+  {
+    "model": "backend.organizations",
+    "pk": 1,
+    "fields": {
+      "name": "Eurocontrol",
+      "type": "administrator"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$CqwKD2r1ws7aExbc4xwQca$lcynEf8xX+eFQPYCEaS1sbmUbBUig8zpE/fg9ZZMC5s=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "producer@swimlake.com",
+      "first_name": "Producer",
+      "last_name": "Swimlake",
+      "email": "producer@swimlake.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-03-11T13:00:00.324Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "backend.user_info",
+    "pk": 2,
+    "fields": {
+      "user": 2,
+      "user_organization": 2,
+      "user_role": "publisher"
+    }
+  },
+  {
+    "model": "backend.organizations",
+    "pk": 2,
+    "fields": {
+      "name": "Eurocontrol",
+      "type": "network_manager"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$260000$W3i2fp86hE5tyvJ3eyRQ8h$T4QOLeCGKEZqFgjSlMpYs/PZKT11BUgKN361NP/ABRs=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "consumer@swimlake.com",
+      "first_name": "Consumer",
+      "last_name": "Swimlake",
+      "email": "consumer@swimlake.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2022-03-11T13:00:00.324Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "backend.user_info",
+    "pk": 3,
+    "fields": {
+      "user": 3,
+      "user_organization": 2,
+      "user_role": "subscriber"
+    }
+  }
 ]
