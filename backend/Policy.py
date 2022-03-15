@@ -125,10 +125,16 @@ class TransformationItem:
                 logger.info("Error occured")
                 self.__payload_data = ''
                 return False
-        else:
+            
+        elif self.data.item_operator == "payload_extraction":
             logger.info("No Json_path")
             self.__payload_data = ''
             return False
+        
+        else:
+            logger.info("No transformations for payload")
+            return True
+        
 
 class Policy:
     """Data structure base type string"""
