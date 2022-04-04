@@ -7,6 +7,8 @@ from jsonpath_ng import jsonpath
 from jsonpath_ng.ext import parse
 import json
 
+import re
+
 logger = logging.getLogger('adc')
 
 class ADCUser:
@@ -81,27 +83,47 @@ class TransformationItem:
             return self.data.organization_name == policy.user.getOrganizationName()
         elif self.data.item_type == "data_based":
             if self.data.item_operator == "payload_extraction":
-                return True
-                # logger.warn(f"Unhandled case : {self.data.item_type}")
+                logger.debug(f"data_extract:{self.__payload_data}")
+                if len(self.__payload_data) > 0:
+                    return True
+                else:
+                    logger.info("Empty extraction")
+                    return False
             elif self.data.item_operator == "organization_name_endpoint_restriction":
                 logger.debug(f"organization_name_endpoint_restriction : {self.__payload_data}, {policy.user.getOrganizationName()}")
                 return policy.user.getOrganizationName() == self.__payload_data
             elif self.data.item_operator == "organization_type_endpoint_restriction":
                 logger.debug(f"organization_type_endpoint_restriction : {self.__payload_data}, {policy.user.getOrganizationType()}")
-                return policy.user.getOrganizationType() == self.__payload_data
-            else:
-                logger.warn(f"Unhandled case : {self.data.item_type}")
-        else:
-            logger.warn(f"Unhandled case : {self.data.item_type}")
-
+                return policy.user.getOrganizationTypeself.data.item_operator
         return False
 
-    def processTransformPayload(self, payload) -> bool:
+    def processTransformPayload(self, payload, endpoint) -> bool:
         """"""
         logger.info('processPayload')
         # TODO - Check exceptions for return error status and no payload
         if self.data.json_path is not None:
             json_path = self.data.json_path
+            # endpoints => users / organizations
+            logger.info(endpoint)
+            logger.info(endpoint.subscriber_policy)
+            logger.info(endpoint.subscriber_policy.getOrganizationName())
+
+            if self.data.item_operator == "subscriber_orgname_filtering":
+                # getSubscriberFilteringExpr
+                logger.info(json_path)
+                expression = re.search('{{(.+?)}}', json_path)
+                if expression:
+                    var = expression.group(1)
+                    # Catch variable
+                    logger.info(var)
+                    # Match variable
+                    if var == 'subscriber.orgname':
+                        # Replace variable to setSubscriberFilteringExpr
+                        json_path = re.sub(r"{{(.+?)}}","THALES",json_path)
+                
+                logger.info(json_path)
+
+
             try:
                 json_data = json.loads(payload.body)
                 jsonpath_expr = parse(json_path)
@@ -195,10 +217,10 @@ class Policy:
         """Return true if the policy match a restriction"""
         return transformation_item.checkRestriction(self)
     
-    def processPayload(self, payload):
+    def processPayload(self, payload, endpoint):
         """Process the payload for all policy transformations"""
         for transformation in self.transformations:
-            if not transformation.processTransformPayload(payload):
+            if not transformation.processTransformPayload(payload, endpoint):
                 return False
         return True
 
