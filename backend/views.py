@@ -359,8 +359,13 @@ def publishMessage(request):
                         SubscriberPolicyManager.findDynamicRoutingForPublisherPolicy(PublisherPolicy.createById(policy_id), payload, endpoints)
 
                         if endpoints and endpoints != None:
-                            for endpoint in endpoints:     
-                                copy_payload = Payload(payload.body)
+                            for endpoint in endpoints:
+                                if len(endpoint.subscriber_orgname_filtering) > 0:     
+                                    copy_payload = Payload(endpoint.subscriber_orgname_filtering)
+                                elif len(endpoint.subscriber_orgtype_filtering) > 0:     
+                                    copy_payload = Payload(endpoint.subscriber_orgtype_filtering)
+                                else:    
+                                    copy_payload = Payload(payload.body)
                                 if SubscriberPolicyManager.findDynamicRoutingWithPayload(PublisherPolicy.createById(policy_id), copy_payload, endpoint):                                    
                                     # Publish data with payload
                                     DataBrokerProxy.publishData(copy_payload.body, endpoint.subscriber_policy.getEndPointAddress())

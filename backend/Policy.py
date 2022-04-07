@@ -40,8 +40,12 @@ class Endpoint:
         """
         Construct the Endpoint
           subscriber_policy : SubscriberPolicy data
+          subscriber_orgname_filtering : Subscriber with organization name filtering data
+          subscriber_orgtype_filtering : Subscriber with organization type filtering data
         """
         self.subscriber_policy = subscriber_policy
+        self.subscriber_orgname_filtering = []
+        self.subscriber_orgtype_filtering = []
 
 class RoutingObject:
     """Contains all the data needed to find endpoints for a message and the payload"""
@@ -82,7 +86,7 @@ class TransformationItem:
             logger.debug(f"organization_name : {self.data.organization_name}, {policy.user.getOrganizationName()}")
             return self.data.organization_name == policy.user.getOrganizationName()
         elif self.data.item_type == "data_based":
-            if self.data.item_operator == "payload_extraction":
+            if self.data.item_operator in ("payload_extraction","subscriber_orgname_filtering","subscriber_orgtype_filtering"):
                 logger.debug(f"data_extract:{self.__payload_data}")
                 if len(self.__payload_data) > 0:
                     return True
@@ -103,29 +107,42 @@ class TransformationItem:
         # TODO - Check exceptions for return error status and no payload
         if self.data.json_path is not None:
             json_path = self.data.json_path
-            # endpoints => users / organizations
-            logger.info(endpoint)
-            logger.info(endpoint.subscriber_policy)
-            logger.info(endpoint.subscriber_policy.getOrganizationName())
 
             if self.data.item_operator == "subscriber_orgname_filtering":
+                orgname = endpoint.subscriber_policy.user.getOrganizationName()
                 # getSubscriberFilteringExpr
                 logger.info(json_path)
                 expression = re.search('{{(.+?)}}', json_path)
                 if expression:
-                    var = expression.group(1)
                     # Catch variable
-                    logger.info(var)
+                    var = expression.group(1)
                     # Match variable
                     if var == 'subscriber.orgname':
                         # Replace variable to setSubscriberFilteringExpr
-                        json_path = re.sub(r"{{(.+?)}}","THALES",json_path)
-                
+                        json_path = re.sub(r"{{(.+?)}}","'"+orgname+"'",json_path)
+                logger.info(json_path)
+            elif self.data.item_operator == "subscriber_orgtype_filtering":
+                orgtype = endpoint.subscriber_policy.user.getOrganizationType()
+                # getSubscriberFilteringExpr
+                logger.info(json_path)
+                expression = re.search('{{(.+?)}}', json_path)
+                if expression:
+                    # Catch variable
+                    var = expression.group(1)
+                    # Match variable
+                    if var == 'subscriber.orgtype':
+                        # Replace variable to setSubscriberFilteringExpr
+                        json_path = re.sub(r"{{(.+?)}}","'"+orgtype+"'",json_path)
                 logger.info(json_path)
 
 
             try:
+                logger.info(payload.body)
+                # loops back on previous transformation
+                if isinstance(payload.body, list):
+                    payload.body = json.dumps(payload.body)
                 json_data = json.loads(payload.body)
+                # json_data = json.dumps(json.loads(payload.body.replace("'", '"')))
                 jsonpath_expr = parse(json_path)
                 matches = jsonpath_expr.find(json_data)
 
@@ -133,8 +150,18 @@ class TransformationItem:
                     if self.data.item_operator == "payload_extraction":
                         payload.body = []
                         for match in matches:
-                        # self.__payload_data = match.value
+                            self.__payload_data = match.value
                             payload.body.append(match.value)
+                    elif self.data.item_operator == "subscriber_orgname_filtering":
+                        endpoint.subscriber_orgname_filtering = []
+                        for match in matches:
+                            self.__payload_data = match.value
+                            endpoint.subscriber_orgname_filtering.append(match.value)
+                    elif self.data.item_operator == "subscriber_orgtype_filtering":
+                        endpoint.subscriber_orgtype_filtering = []
+                        for match in matches:
+                            self.__payload_data = match.value
+                            endpoint.subscriber_orgtype_filtering.append(match.value)
                     else:
                         for match in matches:
                             self.__payload_data = match.value
@@ -148,7 +175,7 @@ class TransformationItem:
                 self.__payload_data = ''
                 return False
             
-        elif self.data.item_operator == "payload_extraction":
+        elif self.data.item_operator in ("payload_extraction","subscriber_orgname_filtering", "subscriber_orgtype_filtering"):
             logger.info("No Json_path")
             self.__payload_data = ''
             return False
