@@ -237,13 +237,14 @@ def findDynamicRoutingForPublisherPolicy(publisher_policy, payload, endpoints, s
 
     to_remove = []
 
-    publisher_policy.processPayload(payload)
+    # publisher_policy.processPayload(payload)
     
     # find all the endpoints that doesn't match the publisher_policy restrictions
     logger.debug("Search endpoints that doesn't match the publisher_policy restrictions")
     for transformation in publisher_policy.transformations:
         if not transformation.isStatic():
             for endpoint in endpoints:
+                publisher_policy.processPayload(payload, endpoint)
                 if not transformation.checkRestriction(endpoint.subscriber_policy):
                     to_remove.append(endpoint)
  
@@ -266,7 +267,7 @@ def findDynamicRoutingWithPayload(publisher_policy, payload, endpoint) -> bool:
     logger.debug("Search dynamic endpoints who have an uncompatible restriction with the publisher_policy")
     logger.debug(f"Endpoint : {endpoint.subscriber_policy.getEndPointAddress()}")
 
-    check_payload = endpoint.subscriber_policy.processPayload(payload)
+    check_payload = endpoint.subscriber_policy.processPayload(payload, endpoint)
     
     for transformation in endpoint.subscriber_policy.transformations:
         logger.debug(f"Transformation : {transformation.data.id}")
