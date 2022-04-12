@@ -213,7 +213,7 @@ function delete_queue
     echo "Deleting queue $address..."
 
     # params : name, remove consumers, autoDeleteAddress
-    sendRequest ${broker_url} 'destroyQueue' "\"$address\", true, true"
+    sendRequest ${broker_url} 'destroyQueue(java.lang.String,boolean,boolean)' "\"$address\", true, true"
     return $?
 }
 
