@@ -119,10 +119,14 @@ class TRANSFORMATION_ITEM(models.Model):
     organization_name_endpoint_restriction = 'Organization name endpoint restriction'
     organization_type_endpoint_restriction = 'Organization type endpoint restriction'
     payload_extraction = 'Payload extraction'
+    subscriber_orgname_filtering = 'Subscriber orgname filtering'
+    subscriber_orgtype_filtering = 'Subscriber orgtype filtering'
     ITEM_OPERATORS = (
         (organization_name_endpoint_restriction, _('organization_name_endpoint_restriction')),
         (organization_type_endpoint_restriction, _('organization_type_endpoint_restriction')),
         (payload_extraction, _('payload_extraction')),
+        (subscriber_orgname_filtering, _('subscriber_orgname_filtering')),
+        (subscriber_orgtype_filtering, _('subscriber_orgtype_filtering')),
     )
     item_operator = models.CharField(_('item_operator'), null=True, choices=ITEM_OPERATORS, max_length=255)
     item_order = models.IntegerField(null=True)
